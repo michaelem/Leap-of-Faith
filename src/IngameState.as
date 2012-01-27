@@ -69,15 +69,25 @@ package
 		override public function update():void
 		{
 			super.update();
+			
+			// MOVEMENT
 			player.acceleration.x = 0;
 			if (FlxG.keys.LEFT) {
 				player.acceleration.x = -player.maxVelocity.x*4;
 			} else if (FlxG.keys.RIGHT) {
 				player.acceleration.x = player.maxVelocity.x*4;
 			}
-			if (player.y > HEIGHT) {
+			if(FlxG.keys.justPressed("SPACE") && player.isTouching(FlxObject.FLOOR)) {
+				player.velocity.y = -player.maxVelocity.y/2;
+			}
+			// IF FALLING DOWN, OUTSIDE THE SCREEN
+			if (player.y > FlxG.height) {
 				player.y = -player.height;
 			}
+			
+			// COLLISION
+			FlxG.collide(level,player);
+			
 		}
 		
 		override public function draw():void
