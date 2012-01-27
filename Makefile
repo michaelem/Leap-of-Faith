@@ -1,8 +1,8 @@
 MXMLC = ./fcsh-wrap
 #MXMLC = mxmlc
 #MXMLC = fcsh
-OPTIONS = -static-link-runtime-shared-libraries=true
-	  #-debug=true
+OPTIONS = -static-link-runtime-shared-libraries=true\ 
+	  -debug=true
 FLIXEL = src
 SRC = src/*.as
 MAIN = src/main.as
