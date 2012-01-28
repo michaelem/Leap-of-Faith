@@ -24,7 +24,7 @@ package
 		public function touched(object:FlxObject, player:FlxObject): void
 		{
             if (player.isTouching(FlxObject.FLOOR)) {
-                player.flicker();
+                //player.flicker();
             }
 		}
 		
