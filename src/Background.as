@@ -33,8 +33,9 @@ package
 		override public function update():void
 		{
 			super.update();
-			var id:int = Math.floor(scroll / bg1.height);
-			var offset:Number = scroll - id * bg1.height;
+			var i_scroll:int = Math.floor(scroll);
+			var id:int = scroll / bg1.height;
+			var offset:int = scroll % bg1.height;
 			if (id%2 == 0) {
 				bg1.y = offset + camera.scroll.y;
 				bg2.y = offset - bg2.height + camera.scroll.y;

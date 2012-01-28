@@ -106,11 +106,7 @@
 		}
 		
 		override public function update():void
-		{	
-			var oldScrollPos:Number = gameCamera.scroll.y;
-			super.update();
-			progress += oldScrollPos - gameCamera.scroll.y;
-			
+		{				
 			background.scroll = progress * 0.6;
 			
 			var playerScreenY:int = player.y - gameCamera.scroll.y;
@@ -120,7 +116,7 @@
 				player.y -= playerScreenY + player.height;
 			} else {
 				if (playerScreenY + player.height < HEIGHT && 
-					playerScreenY + player.height > TILESIZE * 2) {
+					playerScreenY + player.height > TILESIZE) {
 						FlxG.collide(level,player);
 					}
 			}
@@ -141,9 +137,13 @@
 				levelData1 = swapMap(levelData1);
 				level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.OFF);
 				player.y += HEIGHT;
+				player.last.y += HEIGHT;
 				gameCamera.scroll.y += HEIGHT;
 			}
 			
+			var oldScrollPos:Number = gameCamera.scroll.y;
+			super.update();
+			progress += oldScrollPos - gameCamera.scroll.y;
 		}
 		
 		override public function draw():void
