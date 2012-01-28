@@ -1,5 +1,7 @@
 package
 {
+	import flash.display.Sprite;
+	
 	import org.flixel.*;
 	import org.flixel.system.FlxTile;
 	
@@ -30,6 +32,8 @@ package
 		private var levelCounter:int;
 		private var player:Player;
 		private var background:Background;
+		
+		private var spritesFromTiles:FlxGroup;
 		
 		private var stones:FlxGroup;
 		
@@ -78,10 +82,17 @@ package
 			border.cameras = [borderCamera];
 			add(border);
 			
+			// "leap of faith" - bottomText
 			bottomText = new FlxText(50, 500, 500, "leap of faith");
             bottomText.setFormat("aaaiight", 65, 0x00000000, "left");
 			bottomText.cameras = [borderCamera];
 			add(bottomText);
+			
+			// "floor xy" - bottomtext
+			//bottomText = new FlxText(35, 500, 500, "Floor 1");
+			//bottomText.setFormat("aaaiight", 25, 0x00000000, "left");
+			//bottomText.cameras = [borderCamera];
+			//add(bottomText);
 			
 			gameCamera.setBounds(0, 0, TM_WIDTH, TM_HEIGHT);
 			//gameCamera.follow(player);		
@@ -100,6 +111,10 @@ package
 			// destroy
 			//FlxG.collide(level, player, player.touched);
 			//createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
+			
+			spritesFromTiles = new FlxGroup();
+			spritesFromTiles.cameras = [gameCamera];
+			add(spritesFromTiles);
 		}
 		
 		override public function update():void
@@ -136,6 +151,18 @@ package
 				player.y += TM_HEIGHT/2;
 				player.last.y += TM_HEIGHT/2;
 				gameCamera.scroll.y += TM_HEIGHT/2;
+				
+				// remove old sprites
+				for each (var s:FlxSprite in spritesFromTiles.members) {
+					if (s != null) {
+						s.y += TM_HEIGHT/2;
+						if (s.getScreenXY().y > HEIGHT) {
+							spritesFromTiles.remove(s);
+							remove(s);
+						}
+					}
+				}
+				
 			}
 			
 			var oldScrollPos:Number = gameCamera.scroll.y;
@@ -145,10 +172,16 @@ package
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
 		{
-			if (tile.index == 4)	//The player will bounce if he collides with a bouncy block.
+			if (tile.index == 4) {	//The player will bounce if he collides with a bouncy block.
 				object.kill();
-			//if (tile.index == 3)
-			//	createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
+				var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
+				sprite.cameras=[gameCamera];
+				spritesFromTiles.add(sprite)
+			}
+				
+			if (tile.index == 2)
+				createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
+			
 			FlxG.collide(tile, object);
 		}
 		
