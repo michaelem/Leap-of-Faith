@@ -74,10 +74,17 @@ package
 			border.cameras = [borderCamera];
 			add(border);
 			
+			// "leap of faith" - bottomText
 			bottomText = new FlxText(50, 500, 500, "leap of faith");
             bottomText.setFormat("aaaiight", 65, 0x00000000, "left");
 			bottomText.cameras = [borderCamera];
 			add(bottomText);
+			
+			// "floor xy" - bottomtext
+			//bottomText = new FlxText(35, 500, 500, "Floor 1");
+			//bottomText.setFormat("aaaiight", 25, 0x00000000, "left");
+			//bottomText.cameras = [borderCamera];
+			//add(bottomText);
 			
 			gameCamera.setBounds(0, 0, TM_WIDTH, TM_HEIGHT);
 			//gameCamera.follow(player);		
@@ -145,8 +152,10 @@ package
 		{
 			if (tile.index == 4)	//The player will bounce if he collides with a bouncy block.
 				object.kill();
-			if (tile.index == 2)
-				createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
+            if (tile.index == 5)
+                return;
+			//if (tile.index == 2)
+			//	createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
 			FlxG.collide(tile, object);
 		}
 		
