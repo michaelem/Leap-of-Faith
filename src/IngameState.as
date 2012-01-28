@@ -64,7 +64,7 @@
 				0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1,
 				1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+				0, 0, 0, 4, 0, 0, 0, 1, 1, 1, 1, 0, 0,
 				0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0,
@@ -119,6 +119,7 @@
 			if (player.x < TM_OFFSET) {
 				player.x = TM_OFFSET;
 				player.velocity.x = -player.velocity.x;
+				player.velocity.y = player.velocity.y-10;
 			}
 			if (player.x + player.width > TM_WIDTH - TM_OFFSET) {
 				player.x = TM_WIDTH - TM_OFFSET - player.width;
