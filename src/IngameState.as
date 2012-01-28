@@ -199,6 +199,7 @@ package
                 return;
 			//if (tile.index == 3)
 			//	createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
+
 			FlxG.collide(tile, object);
 		}
 		
