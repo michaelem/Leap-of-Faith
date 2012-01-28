@@ -145,7 +145,7 @@ package
 		{
 			if (tile.index == 4)	//The player will bounce if he collides with a bouncy block.
 				object.kill();
-			if (tile.index == 2)
+			if (tile.index == 3)
 				createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
 			FlxG.collide(tile, object);
 		}
