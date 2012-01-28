@@ -25,14 +25,15 @@ package
 		public function touched(object:FlxObject, player:FlxObject): void
 		{
             if (player.isTouching(FlxObject.FLOOR)) {
-                
+                //player.flicker();
+                FlxG.log(object);
                 /*
-                if ((object as FlxTile).index == 4) {
+                if (object.index == 4) {
                     player.flicker();
                 } else {
                     player.flicker();
-                    }
-                */
+                }*/
+                
             }
 		}
 		
