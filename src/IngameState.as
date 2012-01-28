@@ -183,6 +183,7 @@ package
 				var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
 				sprite.cameras=[gameCamera];
 				spritesFromTiles.add(sprite)
+				FlxG.log(tile.mapIndex);
 			}
 				
 			if (tile.index == 2)
