@@ -70,7 +70,7 @@
 			
 			FlxG.cameras[1].setBounds(0, 0, WIDTH, HEIGHT*2 + 10);
 			FlxG.cameras[1].follow(player);		
-			FlxG.cameras[1].deadzone = new FlxRect(0, 100, WIDTH, HEIGHT-150);
+			FlxG.cameras[1].deadzone = new FlxRect(0, 100, WIDTH, HEIGHT-100);
 		}
 		
 		override public function update():void
