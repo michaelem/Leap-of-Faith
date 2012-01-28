@@ -8,6 +8,7 @@ package
 	public class IngameState extends FlxState
 	{
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
+		[Embed(source="../assets/clouds.png")] private static var ImgClouds:Class;
 		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		
@@ -27,6 +28,7 @@ package
 		private var borderCamera:FlxCamera;
 		private var gameCamera:FlxCamera;
 		private var border:FlxSprite;
+		private var clouds:FlxSprite;
 		private var level:FlxTilemap;
 		private var levelData:Array;
 		private var levelCounter:int;
@@ -78,10 +80,21 @@ package
 			border.cameras = [borderCamera];
 			add(border);
 			
+			clouds = new FlxSprite(0, 30, ImgClouds);
+			clouds.cameras = [borderCamera];
+			add(clouds);
+			
+			// "leap of faith" - bottomText
 			bottomText = new FlxText(50, 500, 500, "leap of faith");
             bottomText.setFormat("aaaiight", 65, 0x00000000, "left");
 			bottomText.cameras = [borderCamera];
 			add(bottomText);
+			
+			// "floor xy" - bottomtext
+			//bottomText = new FlxText(35, 500, 500, "Floor 1");
+			//bottomText.setFormat("aaaiight", 25, 0x00000000, "left");
+			//bottomText.cameras = [borderCamera];
+			//add(bottomText);
 			
 			gameCamera.setBounds(0, 0, TM_WIDTH, TM_HEIGHT);
 			//gameCamera.follow(player);		
@@ -174,6 +187,7 @@ package
 				
 			if (tile.index == 2)
 				createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
+			
 			FlxG.collide(tile, object);
 		}
 		
