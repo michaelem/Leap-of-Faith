@@ -4,8 +4,11 @@ package
 	public class Player extends FlxSprite
 	{
 		[Embed(source="../assets/player_sprite.png")] private static var imgPlayer:Class;
+		//[Embed(source="../assets/Jump70.mp3")] private static var SndJump:Class;
 		
 		private var mayJump:Boolean;
+		public var pain:Boolean;
+		private var painCounter:Number;
 		
 		public function Player(X:Number, Y:Number):void
 		{
@@ -22,10 +25,31 @@ package
 			addAnimation("runRight", new Array(1,2,3,4,5,6), 10, true);
 			addAnimation("runLeft", new Array(1,2,3,4,5,6), 10, true);
 			addAnimation("idle", new Array(0), 1, true);
+			painCounter = 0;
+		}
+		
+		public function isDead():Boolean
+		{
+			return (painCounter > 2.0);
+		}
+		
+		public function resetPain():void
+		{
+			painCounter = 0;
+			pain = false;
+			acceleration.y = 700;
 		}
 		
 		override public function update():void
 		{
+			if (pain) {
+				acceleration.y = 0;
+				velocity.y = 0;
+				x += Math.random() * 10 - 5;
+				y += Math.random() * 10 - 5;
+				painCounter += FlxG.elapsed;
+				return;
+			}
 			// MOVEMENT
 			acceleration.x = 0;
 			if (FlxG.keys.LEFT) {
@@ -43,6 +67,7 @@ package
 				mayJump = true;
 			}
 			if(FlxG.keys.SPACE && mayJump && isTouching(FlxObject.FLOOR)) {
+				//FlxG.play(SndJump);
 				velocity.y = -maxVelocity.y;
 				mayJump = false;
 			}
