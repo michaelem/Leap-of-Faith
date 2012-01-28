@@ -15,6 +15,7 @@
 		private static const TM_WIDTH:uint = TILESIZE * 13;
 		private static const TM_HEIGHT:uint = TILESIZE * 26;
 		private static const TM_OFFSET:uint = (TM_WIDTH - WIDTH) / 2;
+		private static const START_SCREEN:uint = 5;
 		
 		private static const WORKING_ARRAY_SIZE:int = 338;
 		private static const WORKING_ARRAY_SIZE_HALF:int = 169;
@@ -134,11 +135,11 @@
 			var i:int;
 			// neue erste haelfte
 			for(i=0; i<WORKING_ARRAY_SIZE_HALF; i++) {
-			        levelData[i] = Screens.screens[1][i];
+			        levelData[i] = Screens.screens[START_SCREEN +1][i];
 			}
 			// neue zweite haelfte
 			for(i=0; i<WORKING_ARRAY_SIZE_HALF; i++) {
-			        levelData[WORKING_ARRAY_SIZE_HALF+i] = Screens.screens[0][i];
+			        levelData[WORKING_ARRAY_SIZE_HALF+i] = Screens.screens[START_SCREEN][i];
 			}
 		}
 		
@@ -148,7 +149,7 @@
 			var i:int;
 			// neue erste haelfte
 			for(i=0; i<WORKING_ARRAY_SIZE_HALF; i++) {
-			        levelDataTmp[i] = Screens.screens[2+levelCounter][i];
+			        levelDataTmp[i] = Screens.screens[START_SCREEN+2+levelCounter][i];
 			}
 			// neue zweite haelfte
 			for(i=0; i<WORKING_ARRAY_SIZE_HALF; i++) {
