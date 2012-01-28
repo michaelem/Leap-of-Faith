@@ -1,7 +1,6 @@
 package
 {
 	import org.flixel.*;
-	import org.flixel.system.FlxTile;
 	public class Player extends FlxSprite
 	{
 		[Embed(source="../assets/player_sprite.png")] private static var imgPlayer:Class;
@@ -20,12 +19,12 @@ package
 			offset = new FlxPoint(4, 6);
 			width = 16;
 			height = 40;
-			addAnimation("runRight", new Array(1,2,3,4,5,6,7), 10, true);
-			addAnimation("runLeft", new Array(1,2,3,4,5,6,7), 10, true);
+			addAnimation("runRight", new Array(1,2,3,4,5,6), 10, true);
+			addAnimation("runLeft", new Array(1,2,3,4,5,6), 10, true);
 			addAnimation("idle", new Array(0), 1, true);
 		}
 		
-	
+
 		override public function update():void
 		{
 			// MOVEMENT
