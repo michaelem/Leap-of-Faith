@@ -5,7 +5,7 @@
 	public class IngameState extends FlxState
 	{
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
-		[Embed(source="../assets/tiles.png")] private static var ImgTiles:Class;
+		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		
 		private static const WIDTH:uint = 440;
@@ -71,6 +71,7 @@
 				0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1 );
 			levelData2 = new Array();
 			level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.AUTO);
+
 			level.cameras = new Array(gameCamera);
 			add(level);
 			
