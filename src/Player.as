@@ -1,6 +1,7 @@
 package
 {
 	import org.flixel.*;
+	import org.flixel.system.FlxTile;
 	public class Player extends FlxSprite
 	{
 		[Embed(source="../assets/player_sprite.png")] private static var imgPlayer:Class;
@@ -27,7 +28,14 @@ package
 		public function touched(object:FlxObject, player:FlxObject): void
 		{
             if (player.isTouching(FlxObject.FLOOR)) {
-                player.flicker();
+                
+                /*
+                if ((object as FlxTile).index == 4) {
+                    player.flicker();
+                } else {
+                    player.flicker();
+                    }
+                */
             }
 		}
 		
