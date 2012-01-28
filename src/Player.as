@@ -4,6 +4,9 @@ package
 	public class Player extends FlxSprite
 	{
 		[Embed(source="../assets/player_idle.png")] private static var ImgIdle:Class;
+		
+		private var mayJump:Boolean;
+		
 		public function Player(X:Number, Y:Number):void
 		{
 			super(X, Y, ImgIdle);
@@ -11,6 +14,7 @@ package
 			maxVelocity.y = 400;
 			acceleration.y = 700;
 			drag.x = maxVelocity.x * 4;
+			mayJump = true;
 		}
 		
 		override public function update():void
@@ -22,8 +26,12 @@ package
 			} else if (FlxG.keys.RIGHT) {
 				acceleration.x = maxVelocity.x*4;
 			}
-			if(FlxG.keys.justPressed("SPACE") && isTouching(FlxObject.FLOOR)) {
+			if(FlxG.keys.justReleased("SPACE")) {
+				mayJump = true;
+			}
+			if(FlxG.keys.SPACE && mayJump && isTouching(FlxObject.FLOOR)) {
 				velocity.y = -maxVelocity.y;
+				mayJump = false;
 			}
 		}
 	}
