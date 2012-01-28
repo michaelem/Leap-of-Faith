@@ -43,7 +43,7 @@
 			
 			level = new FlxTilemap();
 			levelData1 = new Array(
-				1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+				1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
 				0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -58,20 +58,20 @@
 				1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 				0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0,
-				0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1,
+				0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 				0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1,
 				1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+				0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 2, 2, 2, 2, 2, 2, 2, 3, 0, 1, 2, 3,
-				1, 2, 2, 2, 2, 2, 2, 2, 3, 0, 1, 2, 3 );
+				0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0,
+				0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1 );
 			levelData2 = new Array();
-			
 			level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.OFF);
+
 			level.cameras = new Array(gameCamera);
 			add(level);
 			
@@ -124,6 +124,15 @@
 				player.x = TM_WIDTH - TM_OFFSET - player.width;
 				player.velocity.x = -player.velocity.x;
 			}
+			
+			// LOAD MAP
+			if (gameCamera.scroll.y == 0) {
+				levelData1 = swapMap(levelData1);
+				level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.OFF);
+				player.y += HEIGHT;
+				gameCamera.scroll.y += HEIGHT;
+			}
+			
 		}
 		
 		override public function draw():void
@@ -131,33 +140,21 @@
 			super.draw();
 		}
 		
-		public function updateMap():void
+		public function swapMap(levelData:Array):Array
 		{
-			levelData2 = new Array();
-			var copyStartPos:int = levelData1.length/2;
-			// gen new Data
-			for(var i:int=0; i<levelData1.length/2; i++) {
-			        levelData2[i] = levelData1[i];
-			}
-			// copy old Data
-			for(i=copyStartPos; i<levelData1.length; i++) {
-			        levelData2[copyStartPos+i] = levelData1[i];
-			}
-		}
-		
-		public function randMap():void
-		{
-			var arraySize:int = levelData1.length;
+			var arraySize:int = levelData.length;
 			var half:int = arraySize/2;
-			levelData2 = new Array(arraySize);
+			var levelDataTmp:Array = new Array(arraySize);
 			var i:int;
+			// neue erste haelfte
 			for(i=0; i<half; i++) {
-			        levelData2[i] = levelData1[i+14];
+			        levelDataTmp[i] = levelData[half+i];
 			}
-			
-			for(i=half; i<arraySize; i++) {
-			        levelData2[i] = levelData1[i-9];
+			// neue zweite haelfte
+			for(i=0; i<half; i++) {
+			        levelDataTmp[half+i] = levelData[i];
 			}
+			return levelDataTmp;
 		}
 		
 	}
