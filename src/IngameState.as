@@ -1,4 +1,4 @@
-package
+	package
 {
 	import org.flixel.*;
 	
@@ -25,38 +25,40 @@ package
 			
 			level = new FlxTilemap();
 			var data:Array = new Array(
-				1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
-				1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1,
-				1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0,
-				1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1,
-				1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
-				1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0,
-				1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0,
-				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0,
-				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
-				1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-				1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 );
-			level.loadMap(FlxTilemap.arrayToCSV(data,22), ImgTiles, 20, 20, FlxTilemap.AUTO);
+				1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0,
+				0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+				0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0,
+				1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1 );
+			level.loadMap(FlxTilemap.arrayToCSV(data,12), ImgTiles, 35, 35, FlxTilemap.AUTO);
 			level.cameras = new Array(FlxG.cameras[1]);
 			add(level);
 			
-			player = new FlxSprite(FlxG.width/2 - 5, 0);
-			player.makeGraphic(10, 20, 0xffff0000);
-			player.maxVelocity.x = 80;
-			player.maxVelocity.y = 200;
-			player.acceleration.y = 200;
+			player = new FlxSprite(FlxG.width/2 - 9, 0);
+			player.makeGraphic(18, 45, 0xffff0000);
+			player.maxVelocity.x = 180;
+			player.maxVelocity.y = 400;
+			player.acceleration.y = 700;
 			player.drag.x = player.maxVelocity.x * 4;
 			player.cameras = new Array(FlxG.cameras[1]);
 			add(player);
@@ -64,12 +66,13 @@ package
 			border = new FlxSprite(0, 0, ImgBorder);
 			border.cameras = new Array(FlxG.cameras[0]);
 			add(border);
+			
+			FlxG.cameras[1].setBounds(0, 0, WIDTH, HEIGHT*2)
+			cameraflow();	
 		}
 		
 		override public function update():void
 		{
-			super.update();
-			
 			// MOVEMENT
 			player.acceleration.x = 0;
 			if (FlxG.keys.LEFT) {
@@ -78,11 +81,12 @@ package
 				player.acceleration.x = player.maxVelocity.x*4;
 			}
 			if(FlxG.keys.justPressed("SPACE") && player.isTouching(FlxObject.FLOOR)) {
-				player.velocity.y = -player.maxVelocity.y/2;
+				player.velocity.y = -player.maxVelocity.y;
 			}
+			super.update();
 			// IF FALLING DOWN, OUTSIDE THE SCREEN
-			if (player.y > FlxG.height) {
-				player.y = -player.height;
+			if (player.y > FlxG.height*2) {
+				//player.y = player.y - HEIGHT*2;
 			}
 			
 			// COLLISION
@@ -93,6 +97,12 @@ package
 		override public function draw():void
 		{
 			super.draw();
+		}
+		
+		public function cameraflow():void
+		{
+			//FlxG.cameras[1].setBounds(0, 0, WIDTH, HEIGHT*2)
+			FlxG.cameras[1].follow(player, 2)
 		}
 	}
 }
