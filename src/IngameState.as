@@ -6,6 +6,7 @@ package
 	public class IngameState extends FlxState
 	{
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
+		[Embed(source="../assets/clouds.png")] private static var ImgClouds:Class;
 		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		
@@ -25,6 +26,7 @@ package
 		private var borderCamera:FlxCamera;
 		private var gameCamera:FlxCamera;
 		private var border:FlxSprite;
+		private var clouds:FlxSprite;
 		private var level:FlxTilemap;
 		private var levelData:Array;
 		private var levelCounter:int;
@@ -73,6 +75,10 @@ package
 			border = new FlxSprite(0, 0, ImgBorder);
 			border.cameras = [borderCamera];
 			add(border);
+			
+			clouds = new FlxSprite(0, 30, ImgClouds);
+			clouds.cameras = [borderCamera];
+			add(clouds);
 			
 			bottomText = new FlxText(50, 500, 500, "leap of faith");
             bottomText.setFormat("aaaiight", 65, 0x00000000, "left");
