@@ -5,7 +5,7 @@
 	public class IngameState extends FlxState
 	{
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
-		[Embed(source="../assets/tiles.png")] private static var ImgTiles:Class;
+		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		
 		private static const WIDTH:uint = 440;
@@ -24,6 +24,8 @@
 		private var levelData2:Array;
 		private var player:Player;
 		private var background:Background;
+		
+		private var progress:Number = 0;
 		
 		private var camera:Camera;
 		
@@ -46,7 +48,7 @@
 			
 			level = new FlxTilemap();
 			levelData1 = new Array(
-				1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+				1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
 				0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -61,21 +63,22 @@
 				1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 				0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0,
-				0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1,
+				0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+				1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
 				0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1,
 				1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0,
+				0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1,
-				1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1 );
+				0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0,
+				0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1 );
 			levelData2 = new Array();
-			
-			level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.AUTO);
+
+			level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.OFF);
 			level.cameras = [gameCamera];
+
 			add(level);
 			
 			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
@@ -104,9 +107,11 @@
 		
 		override public function update():void
 		{	
+			var oldScrollPos:Number = gameCamera.scroll.y;
 			super.update();
+			progress += oldScrollPos - gameCamera.scroll.y;
 			
-			background.scroll += 100 * FlxG.elapsed;
+			background.scroll = progress * 0.6;
 			
 			var playerScreenY:int = player.y - gameCamera.scroll.y;
 			
@@ -129,6 +134,15 @@
 				player.x = TM_WIDTH - TM_OFFSET - player.width;
 				player.velocity.x = -player.velocity.x;
 			}
+			
+			// LOAD MAP
+			if (gameCamera.scroll.y == 0) {
+				levelData1 = swapMap(levelData1);
+				level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.OFF);
+				player.y += HEIGHT;
+				gameCamera.scroll.y += HEIGHT;
+			}
+			
 		}
 		
 		override public function draw():void
@@ -136,33 +150,21 @@
 			super.draw();
 		}
 		
-		public function updateMap():void
+		public function swapMap(levelData:Array):Array
 		{
-			levelData2 = new Array();
-			var copyStartPos:int = levelData1.length/2;
-			// gen new Data
-			for(var i:int=0; i<levelData1.length/2; i++) {
-			        levelData2[i] = levelData1[i];
-			}
-			// copy old Data
-			for(i=copyStartPos; i<levelData1.length; i++) {
-			        levelData2[copyStartPos+i] = levelData1[i];
-			}
-		}
-		
-		public function randMap():void
-		{
-			var arraySize:int = levelData1.length;
+			var arraySize:int = levelData.length;
 			var half:int = arraySize/2;
-			levelData2 = new Array(arraySize);
+			var levelDataTmp:Array = new Array(arraySize);
 			var i:int;
+			// neue erste haelfte
 			for(i=0; i<half; i++) {
-			        levelData2[i] = levelData1[i+14];
+			        levelDataTmp[i] = levelData[half+i];
 			}
-			
-			for(i=half; i<arraySize; i++) {
-			        levelData2[i] = levelData1[i-9];
+			// neue zweite haelfte
+			for(i=0; i<half; i++) {
+			        levelDataTmp[half+i] = levelData[i];
 			}
+			return levelDataTmp;
 		}
 		
 	}
