@@ -19,7 +19,9 @@
 		private var gameCamera:FlxCamera;
 		private var border:FlxSprite;
 		private var level:FlxTilemap;
-		private var player:FlxSprite;
+		private var player:Player;
+		
+		private var camera:Camera;
 		
 		private var text:FlxText;
 		
@@ -68,7 +70,8 @@
 			level.cameras = new Array(gameCamera);
 			add(level);
 			
-			player = new Player(TM_WIDTH/2, 0);
+			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
+			gameCamera.scroll.y = HEIGHT;
 			player.x -= player.width/2;
 			player.cameras = new Array(gameCamera);
 			add(player);
@@ -83,20 +86,30 @@
 			add(text);
 			
 			gameCamera.setBounds(0, 0, TM_WIDTH, TM_HEIGHT);
-			gameCamera.follow(player);		
-			gameCamera.deadzone = new FlxRect(0, 100, WIDTH, HEIGHT-100);
+			//gameCamera.follow(player);		
+			//gameCamera.deadzone = new FlxRect(0, 100, WIDTH, HEIGHT);
+			
+			camera = new Camera(gameCamera, player);
+			add(camera);
 		}
 		
 		override public function update():void
-		{
+		{	
 			super.update();
+			
+			var playerScreenY:int = player.y - gameCamera.scroll.y;
+			
 			// IF FALLING DOWN, OUTSIDE THE SCREEN
-			if (player.y > HEIGHT*2 + 10) {
-				//player.y = player.y - HEIGHT*2;
+			if (playerScreenY > HEIGHT) {
+				player.y -= playerScreenY + player.height;
+			} else {
+				if (playerScreenY + player.height < HEIGHT && 
+					playerScreenY + player.height > TILESIZE * 2) {
+						FlxG.collide(level,player);
+					}
 			}
 			
 			// COLLISION
-			FlxG.collide(level,player);
 			if (player.x < TM_OFFSET) {
 				player.x = TM_OFFSET;
 				player.velocity.x = -player.velocity.x;
