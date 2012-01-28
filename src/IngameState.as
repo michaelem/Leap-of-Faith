@@ -1,5 +1,7 @@
 package
 {
+	import flash.display.Sprite;
+	
 	import org.flixel.*;
 	import org.flixel.system.FlxTile;
 	
@@ -30,6 +32,8 @@ package
 		private var levelCounter:int;
 		private var player:Player;
 		private var background:Background;
+		
+		private var spritesFromTiles:FlxGroup;
 		
 		private var stones:FlxGroup;
 		
@@ -96,6 +100,10 @@ package
 			// destroy
 			//FlxG.collide(level, player, player.touched);
 			//createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
+			
+			spritesFromTiles = new FlxGroup();
+			spritesFromTiles.cameras = [gameCamera];
+			add(spritesFromTiles);
 		}
 		
 		override public function update():void
@@ -129,9 +137,22 @@ package
 			if (gameCamera.scroll.y == 0) {
 				levelData = swapMap(levelData);
 				level.loadMap(FlxTilemap.arrayToCSV(levelData,13), ImgTiles, 35, 35, FlxTilemap.OFF);
-				player.y += HEIGHT;
-				player.last.y += HEIGHT;
-				gameCamera.scroll.y += HEIGHT;
+				player.y += TM_HEIGHT/2;
+				
+				player.last.y += TM_HEIGHT/2;
+				gameCamera.scroll.y += TM_HEIGHT/2;
+				
+				// remove old sprites
+				for each (var s:FlxSprite in spritesFromTiles.members) {
+					if (s != null) {
+						s.y += TM_HEIGHT/2;
+						if (s.getScreenXY().y > HEIGHT) {
+							spritesFromTiles.remove(s);
+							remove(s);
+						}
+					}
+				}
+				
 			}
 			
 			var oldScrollPos:Number = gameCamera.scroll.y;
@@ -139,12 +160,18 @@ package
 			progress += oldScrollPos - gameCamera.scroll.y;
 			
 			
+			
 		}
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
 		{
-			if (tile.index == 4)	//The player will bounce if he collides with a bouncy block.
+			if (tile.index == 4) {	//The player will bounce if he collides with a bouncy block.
 				object.kill();
+				var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
+				sprite.cameras=[gameCamera];
+				spritesFromTiles.add(sprite)
+			}
+				
 			if (tile.index == 2)
 				createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
 			FlxG.collide(tile, object);
