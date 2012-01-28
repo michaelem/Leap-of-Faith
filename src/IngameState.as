@@ -23,6 +23,7 @@
 		private var levelData1:Array;
 		private var levelData2:Array;
 		private var player:Player;
+		private var background:Background;
 		
 		private var camera:Camera;
 		
@@ -40,6 +41,8 @@
 			FlxG.bgColor = 0xffaaaaaa;
 			borderCamera.bgColor = 0x00000000;
 			
+			background = new Background([gameCamera]);
+			add(background);
 			
 			level = new FlxTilemap();
 			levelData1 = new Array(
@@ -72,23 +75,23 @@
 			levelData2 = new Array();
 			
 			level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.AUTO);
-			level.cameras = new Array(gameCamera);
+			level.cameras = [gameCamera];
 			add(level);
 			
 			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
 			gameCamera.scroll.y = HEIGHT;
 
 			player.x -= player.width/2;
-			player.cameras = new Array(gameCamera);
+			player.cameras = [gameCamera];
 			add(player);
 			
 			border = new FlxSprite(0, 0, ImgBorder);
-			border.cameras = new Array(borderCamera);
+			border.cameras = [borderCamera];
 			add(border);
 			
 			bottomText = new FlxText(50, 500, 500, "leap of faith");
             bottomText.setFormat("aaaiight", 65, 0x00000000, "left");
-			bottomText.cameras = new Array(borderCamera);
+			bottomText.cameras = [borderCamera];
 			add(bottomText);
 			
 			gameCamera.setBounds(0, 0, TM_WIDTH, TM_HEIGHT);
@@ -102,6 +105,8 @@
 		override public function update():void
 		{	
 			super.update();
+			
+			background.scroll += 100 * FlxG.elapsed;
 			
 			var playerScreenY:int = player.y - gameCamera.scroll.y;
 			
