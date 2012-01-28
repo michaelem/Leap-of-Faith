@@ -6,6 +6,7 @@
 	{
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
 		[Embed(source="../assets/tiles.png")] private static var ImgTiles:Class;
+		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		
 		private static const WIDTH:uint = 440;
 		private static const HEIGHT:uint = 450;
@@ -21,7 +22,7 @@
 		private var level:FlxTilemap;
 		private var player:FlxSprite;
 		
-		private var text:FlxText;
+		private var bottomText:FlxText;
 		
 		override public function create():void
 		{	
@@ -77,10 +78,10 @@
 			border.cameras = new Array(borderCamera);
 			add(border);
 			
-			text = new FlxText(0, 0, 100, "Text");
-			text.color = 0xffff0000;
-			text.cameras = new Array(borderCamera);
-			add(text);
+			bottomText = new FlxText(50, 500, 500, "leap of faith");
+            bottomText.setFormat("aaaiight", 65, 0x00000000, "left");
+			bottomText.cameras = new Array(borderCamera);
+			add(bottomText);
 			
 			gameCamera.setBounds(0, 0, TM_WIDTH, TM_HEIGHT);
 			gameCamera.follow(player);		
