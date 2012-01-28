@@ -16,13 +16,19 @@
 		private static const TM_HEIGHT:uint = TILESIZE * 26;
 		private static const TM_OFFSET:uint = (TM_WIDTH - WIDTH) / 2;
 		
+		private static const WORKING_ARRAY_SIZE:int = 338;
+		private static const WORKING_ARRAY_SIZE_HALF:int = 169;
+		
 		private var borderCamera:FlxCamera;
 		private var gameCamera:FlxCamera;
 		private var border:FlxSprite;
 		private var level:FlxTilemap;
-		private var levelData1:Array;
-		private var levelData2:Array;
+		private var levelData:Array;
+		private var levelCounter:int;
 		private var player:Player;
+		private var background:Background;
+		
+		private var progress:Number = 0;
 		
 		private var camera:Camera;
 		
@@ -40,55 +46,33 @@
 			FlxG.bgColor = 0xffaaaaaa;
 			borderCamera.bgColor = 0x00000000;
 			
-			
-			level = new FlxTilemap();
-			levelData1 = new Array(
-				1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
-				0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-				1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0,
-				0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-				1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-				0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-				1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-				0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1,
-				1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 4, 0, 0, 0, 1, 1, 1, 1, 0, 0,
-				0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0,
-				0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1 );
-			levelData2 = new Array();
-			level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.OFF);
+			background = new Background([gameCamera]);
+			add(background);
 
-			level.cameras = new Array(gameCamera);
+			level = new FlxTilemap();
+			levelCounter = 0;
+			
+			levelData = new Array();
+			initMap();
+			level.loadMap(FlxTilemap.arrayToCSV(levelData,13), ImgTiles, 35, 35, FlxTilemap.OFF);
+			level.cameras = [gameCamera];
+
 			add(level);
 			level.
 			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
 			gameCamera.scroll.y = HEIGHT;
 
 			player.x -= player.width/2;
-			player.cameras = new Array(gameCamera);
+			player.cameras = [gameCamera];
 			add(player);
 			
 			border = new FlxSprite(0, 0, ImgBorder);
-			border.cameras = new Array(borderCamera);
+			border.cameras = [borderCamera];
 			add(border);
 			
 			bottomText = new FlxText(50, 500, 500, "leap of faith");
             bottomText.setFormat("aaaiight", 65, 0x00000000, "left");
-			bottomText.cameras = new Array(borderCamera);
+			bottomText.cameras = [borderCamera];
 			add(bottomText);
 			
 			gameCamera.setBounds(0, 0, TM_WIDTH, TM_HEIGHT);
@@ -100,8 +84,8 @@
 		}
 		
 		override public function update():void
-		{	
-			super.update();
+		{				
+			background.scroll = progress * 0.6;
 			
 			var playerScreenY:int = player.y - gameCamera.scroll.y;
 			
@@ -110,7 +94,7 @@
 				player.y -= playerScreenY + player.height;
 			} else {
 				if (playerScreenY + player.height < HEIGHT && 
-					playerScreenY + player.height > TILESIZE * 2) {
+					playerScreenY + player.height > TILESIZE) {
 						FlxG.collide(level, player, player.touched);
 					}
 			}
@@ -128,12 +112,16 @@
 			
 			// LOAD MAP
 			if (gameCamera.scroll.y == 0) {
-				levelData1 = swapMap(levelData1);
-				level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.OFF);
+				levelData = swapMap(levelData);
+				level.loadMap(FlxTilemap.arrayToCSV(levelData,13), ImgTiles, 35, 35, FlxTilemap.OFF);
 				player.y += HEIGHT;
+				player.last.y += HEIGHT;
 				gameCamera.scroll.y += HEIGHT;
 			}
 			
+			var oldScrollPos:Number = gameCamera.scroll.y;
+			super.update();
+			progress += oldScrollPos - gameCamera.scroll.y;
 		}
 		
 		override public function draw():void
@@ -141,20 +129,33 @@
 			super.draw();
 		}
 		
-		public function swapMap(levelData:Array):Array
+		public function initMap():void
 		{
-			var arraySize:int = levelData.length;
-			var half:int = arraySize/2;
-			var levelDataTmp:Array = new Array(arraySize);
+			var levelDataTmp:Array = new Array(WORKING_ARRAY_SIZE);
 			var i:int;
 			// neue erste haelfte
-			for(i=0; i<half; i++) {
-			        levelDataTmp[i] = levelData[half+i];
+			for(i=0; i<WORKING_ARRAY_SIZE_HALF; i++) {
+			        levelData[i] = Screens.screens[1][i];
 			}
 			// neue zweite haelfte
-			for(i=0; i<half; i++) {
-			        levelDataTmp[half+i] = levelData[i];
+			for(i=0; i<WORKING_ARRAY_SIZE_HALF; i++) {
+			        levelData[WORKING_ARRAY_SIZE_HALF+i] = Screens.screens[0][i];
 			}
+		}
+		
+		public function swapMap(levelData:Array):Array
+		{
+			var levelDataTmp:Array = new Array(WORKING_ARRAY_SIZE);
+			var i:int;
+			// neue erste haelfte
+			for(i=0; i<WORKING_ARRAY_SIZE_HALF; i++) {
+			        levelDataTmp[i] = Screens.screens[2+levelCounter][i];
+			}
+			// neue zweite haelfte
+			for(i=0; i<WORKING_ARRAY_SIZE_HALF; i++) {
+			        levelDataTmp[WORKING_ARRAY_SIZE_HALF+i] = levelData[i];
+			}
+			levelCounter++;
 			return levelDataTmp;
 		}
 		
