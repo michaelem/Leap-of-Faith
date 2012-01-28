@@ -58,7 +58,6 @@
 			level.cameras = [gameCamera];
 
 			add(level);
-			level.
 			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
 			gameCamera.scroll.y = HEIGHT;
 
