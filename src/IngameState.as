@@ -95,7 +95,7 @@ package
 			// fly
 			// destroy
 			//FlxG.collide(level, player, player.touched);
-			//createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
+			//createStone(TM_WIDTH/2+50, TM_HEIGHT*3/4);
 		}
 		
 		override public function update():void
@@ -138,18 +138,26 @@ package
 			super.update();
 			progress += oldScrollPos - gameCamera.scroll.y;
 			
-			
 		}
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
 		{
 			if (tile.index == 4)	//The player will bounce if he collides with a bouncy block.
 				object.kill();
-			//if (tile.index == 3)
-			//	createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
+			if (tile.index == 7) {
+				FlxG.log("x "+tile.x+" y "+ tile.y);
+				FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+				if (level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)) == 6) {
+					createStone(tile.x, tile.y+35);
+					//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+					//FlxG.log("num"+level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)));
+					level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35),0,true);
+				}
+			}
+				
 			FlxG.collide(tile, object);
 		}
-		
+			
 		override public function draw():void
 		{
 			super.draw();
@@ -191,5 +199,11 @@ package
 			return levelDataTmp;
 		}
 		
+		public function getIndexByWorldCoords(x:int,y:int):int
+		{
+			var tX:int = FlxU.floor(x/TILESIZE)
+			var tY:int = FlxU.floor(y/TILESIZE) 
+			return tY * 13 + tX;
+		}
 	}
 }
