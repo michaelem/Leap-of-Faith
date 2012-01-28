@@ -1,12 +1,13 @@
 package
 {
+	import flash.display.Sprite;
+	
 	import org.flixel.*;
 	import org.flixel.system.FlxTile;
 	
 	public class IngameState extends FlxState
 	{
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
-		[Embed(source="../assets/clouds.png")] private static var ImgClouds:Class;
 		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		
@@ -17,21 +18,22 @@ package
 		private static const TM_WIDTH:uint = TILESIZE * 13;
 		private static const TM_HEIGHT:uint = TILESIZE * 26;
 		private static const TM_OFFSET:uint = (TM_WIDTH - WIDTH) / 2;
-		private static const START_SCREEN:uint = 5;
+		private static const START_SCREEN:uint = 0;
 
-		
 		private static const WORKING_ARRAY_SIZE:int = 338;
 		private static const WORKING_ARRAY_SIZE_HALF:int = 169;
 		
 		private var borderCamera:FlxCamera;
 		private var gameCamera:FlxCamera;
 		private var border:FlxSprite;
-		private var clouds:FlxSprite;
+		private var clouds:Clouds;
 		private var level:FlxTilemap;
 		private var levelData:Array;
 		private var levelCounter:int;
 		private var player:Player;
 		private var background:Background;
+		
+		private var spritesFromTiles:FlxGroup;
 		
 		private var stones:FlxGroup;
 		
@@ -69,6 +71,10 @@ package
 			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
 			gameCamera.scroll.y = HEIGHT;
 
+			clouds = new Clouds();
+			clouds.setCameras([gameCamera]);
+			add(clouds);
+
 			player.x -= player.width/2;
 			player.cameras = [gameCamera];
 			add(player);
@@ -76,10 +82,6 @@ package
 			border = new FlxSprite(0, 0, ImgBorder);
 			border.cameras = [borderCamera];
 			add(border);
-			
-			clouds = new FlxSprite(0, 30, ImgClouds);
-			clouds.cameras = [borderCamera];
-			add(clouds);
 			
 			// "leap of faith" - bottomText
 			//bottomText = new FlxText(50, 500, 500, "leap of faith");
@@ -110,6 +112,10 @@ package
 			// destroy
 			//FlxG.collide(level, player, player.touched);
 			//createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
+			
+			spritesFromTiles = new FlxGroup();
+			spritesFromTiles.cameras = [gameCamera];
+			add(spritesFromTiles);
 		}
 		
 		override public function update():void
@@ -143,16 +149,26 @@ package
 			if (gameCamera.scroll.y == 0) {
 				levelData = swapMap(levelData);
 				level.loadMap(FlxTilemap.arrayToCSV(levelData,13), ImgTiles, 35, 35, FlxTilemap.OFF);
-				player.y += HEIGHT;
-				player.last.y += HEIGHT;
-				gameCamera.scroll.y += HEIGHT;
+				player.y += TM_HEIGHT/2;
+				player.last.y += TM_HEIGHT/2;
+				gameCamera.scroll.y += TM_HEIGHT/2;
+				
+				// remove old sprites
+				for each (var s:FlxSprite in spritesFromTiles.members) {
+					if (s != null) {
+						s.y += TM_HEIGHT/2;
+						if (s.getScreenXY().y > HEIGHT) {
+							spritesFromTiles.remove(s);
+							remove(s);
+						}
+					}
+				}
+				
 			}
 			
 			var oldScrollPos:Number = gameCamera.scroll.y;
 			super.update();
 			progress += oldScrollPos - gameCamera.scroll.y;
-			
-			
 		}
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
