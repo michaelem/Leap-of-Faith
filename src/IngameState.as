@@ -209,6 +209,7 @@ package
 					//FlxG.log("num"+level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)));
 					level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35),0,true);
 				}
+				FlxG.collide(tile, object);
 			} else {
 				if (tile.index != 5) FlxG.collide(tile, object);
 			}
