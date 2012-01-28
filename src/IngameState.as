@@ -173,34 +173,37 @@ package
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
 		{
-			if (tile.index == 4)	//The player will bounce if he collides with a bouncy block.
-			{
-                //bottomText.text="killed at floor " + (levelCounter+2);
-                var respawnPoints:Array = level.getTileCoords(5,false);
-                bottomText.text="killed at floor " + respawnPoints[0].x + "/" +  respawnPoints[0].y + respawnPoints[1].x + "/" +  respawnPoints[1].y;
-                FlxG.shake(0.10, 0.5, function():void{
-                        if (respawnPoints[0].y > respawnPoints[1].y)
-                        {
-                            gameCamera.scroll.y = respawnPoints[0].y - 150;
-                            object.x = respawnPoints[0].x + object.width/2;
-                            object.y = respawnPoints[0].y - object.height;
-                        } 
-                        else 
-                        {
-                            gameCamera.scroll.y = respawnPoints[1].y - 150;
-                            object.x = respawnPoints[1].x + object.width/2;
-                            object.y = respawnPoints[1].y - object.height;
-                        }
-                }, false, 0);
-                //object.kill();
+			if (tile.index == 4) {
+				if ( (Math.abs(tile.x-object.x) < 25) && (tile.y-object.y>0) && (tile.y-object.y<30) ) 	//The player will bounce if he collides with a bouncy block.
+				{
+					var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
+					sprite.cameras=[gameCamera];
+					spritesFromTiles.add(sprite)
+					
+	                //bottomText.text="killed at floor " + (levelCounter+2);
+	                var respawnPoints:Array = level.getTileCoords(5,false);
+	                bottomText.text="killed at floor " + respawnPoints[0].x + "/" +  respawnPoints[0].y + respawnPoints[1].x + "/" +  respawnPoints[1].y;
+	                FlxG.shake(0.10, 0.5, function():void{
+	                        if (respawnPoints[0].y > respawnPoints[1].y)
+	                        {
+	                            gameCamera.scroll.y = respawnPoints[0].y - 150;
+	                            object.x = respawnPoints[0].x + object.width/2;
+	                            object.y = respawnPoints[0].y - object.height;
+	                        } 
+	                        else 
+	                        {
+	                            gameCamera.scroll.y = respawnPoints[1].y - 150;
+	                            object.x = respawnPoints[1].x + object.width/2;
+	                            object.y = respawnPoints[1].y - object.height;
+	                        }
+	                }, false, 0);
+	                //object.kill();
+				}
 			}
-				
-            if (tile.index == 5)
-                return;
-			//if (tile.index == 3)
-			//	createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
-
-			FlxG.collide(tile, object);
+			else {
+				if (tile.index != 5) FlxG.collide(tile, object);
+			}
+			
 		}
 		
 		// goes to respawn point at screen 
