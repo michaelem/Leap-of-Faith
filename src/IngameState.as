@@ -125,9 +125,6 @@ package
 				player.velocity.x = -player.velocity.x;
 			}
 			
-			// STONE TRAP
-			level.overlapsWithCallback(player, levelCollision);
-			
 			// LOAD MAP
 			if (gameCamera.scroll.y == 0) {
 				levelData = swapMap(levelData);
@@ -148,19 +145,14 @@ package
 		{
 			if (tile.index == 4)	//The player will bounce if he collides with a bouncy block.
 				object.kill();
+			if (tile.index == 2)
+				createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
 			FlxG.collide(tile, object);
 		}
 		
 		override public function draw():void
 		{
 			super.draw();
-		}
-		
-		private function levelCollision(Tile:FlxTile, Object:FlxObject):void	//function called when player touches a bouncy block
-		{
-			if (Tile.index == 2)	//The player will bounce if he collides with a bouncy block.
-				createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
-			FlxCollide(player, level);
 		}
 		
 		public function createStone(X:uint,Y:uint):void
