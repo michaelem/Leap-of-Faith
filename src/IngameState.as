@@ -1,5 +1,7 @@
 package
 {
+	import flash.display.Sprite;
+	
 	import org.flixel.*;
 	import org.flixel.system.FlxTile;
 	
@@ -18,18 +20,20 @@ package
 		private static const TM_OFFSET:uint = (TM_WIDTH - WIDTH) / 2;
 		private static const START_SCREEN:uint = 0;
 
-		
 		private static const WORKING_ARRAY_SIZE:int = 338;
 		private static const WORKING_ARRAY_SIZE_HALF:int = 169;
 		
 		private var borderCamera:FlxCamera;
 		private var gameCamera:FlxCamera;
 		private var border:FlxSprite;
+		private var clouds:Clouds;
 		private var level:FlxTilemap;
 		private var levelData:Array;
 		private var levelCounter:int;
 		private var player:Player;
 		private var background:Background;
+		
+		private var spritesFromTiles:FlxGroup;
 		
 		private var stones:FlxGroup;
 		
@@ -38,6 +42,7 @@ package
 		private var camera:Camera;
 		
 		private var bottomText:FlxText;
+	 
 		
 		override public function create():void
 		{	
@@ -66,6 +71,10 @@ package
 			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
 			gameCamera.scroll.y = HEIGHT;
 
+			clouds = new Clouds();
+			clouds.setCameras([gameCamera]);
+			add(clouds);
+
 			player.x -= player.width/2;
 			player.cameras = [gameCamera];
 			add(player);
@@ -74,8 +83,15 @@ package
 			border.cameras = [borderCamera];
 			add(border);
 			
-			bottomText = new FlxText(50, 500, 500, "leap of faith");
-            bottomText.setFormat("aaaiight", 65, 0x00000000, "left");
+			// "leap of faith" - bottomText
+			//bottomText = new FlxText(50, 500, 500, "leap of faith");
+            //bottomText.setFormat("aaaiight", 65, 0x00000000, "left");
+			//bottomText.cameras = [borderCamera];
+			//add(bottomText);
+			
+			// "floor xy" - bottomtext
+			bottomText = new FlxText(35, 500, 500, "Floor 1");
+			bottomText.setFormat("aaaiight", 25, 0x00000000, "left");
 			bottomText.cameras = [borderCamera];
 			add(bottomText);
 			
@@ -95,7 +111,11 @@ package
 			// fly
 			// destroy
 			//FlxG.collide(level, player, player.touched);
-			//createStone(TM_WIDTH/2+50, TM_HEIGHT*3/4);
+			//createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
+			
+			spritesFromTiles = new FlxGroup();
+			spritesFromTiles.cameras = [gameCamera];
+			add(spritesFromTiles);
 		}
 		
 		override public function update():void
@@ -129,22 +149,58 @@ package
 			if (gameCamera.scroll.y == 0) {
 				levelData = swapMap(levelData);
 				level.loadMap(FlxTilemap.arrayToCSV(levelData,13), ImgTiles, 35, 35, FlxTilemap.OFF);
-				player.y += HEIGHT;
-				player.last.y += HEIGHT;
-				gameCamera.scroll.y += HEIGHT;
+				player.y += TM_HEIGHT/2;
+				player.last.y += TM_HEIGHT/2;
+				gameCamera.scroll.y += TM_HEIGHT/2;
+				
+				// remove old sprites
+				for each (var s:FlxSprite in spritesFromTiles.members) {
+					if (s != null) {
+						s.y += TM_HEIGHT/2;
+						if (s.getScreenXY().y > HEIGHT) {
+							spritesFromTiles.remove(s);
+							remove(s);
+						}
+					}
+				}
+				
 			}
 			
 			var oldScrollPos:Number = gameCamera.scroll.y;
 			super.update();
 			progress += oldScrollPos - gameCamera.scroll.y;
-			
+
 		}
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
 		{
-			if (tile.index == 4)	//The player will bounce if he collides with a bouncy block.
-				object.kill();
-			if (tile.index == 7) {
+			if (tile.index == 4) {
+				if ( (Math.abs(tile.x-object.x) < 25) && (tile.y-object.y>0) && (tile.y-object.y<30) ) 	//The player will bounce if he collides with a bouncy block.
+				{
+					var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
+					sprite.cameras=[gameCamera];
+					spritesFromTiles.add(sprite)
+					
+	                //bottomText.text="killed at floor " + (levelCounter+2);
+	                var respawnPoints:Array = level.getTileCoords(5,false);
+	                bottomText.text="killed at floor " + respawnPoints[0].x + "/" +  respawnPoints[0].y + respawnPoints[1].x + "/" +  respawnPoints[1].y;
+	                FlxG.shake(0.10, 0.5, function():void{
+	                        if (respawnPoints[0].y > respawnPoints[1].y)
+	                        {
+	                            gameCamera.scroll.y = respawnPoints[0].y - 150;
+	                            object.x = respawnPoints[0].x + object.width/2;
+	                            object.y = respawnPoints[0].y - object.height;
+	                        } 
+	                        else 
+	                        {
+	                            gameCamera.scroll.y = respawnPoints[1].y - 150;
+	                            object.x = respawnPoints[1].x + object.width/2;
+	                            object.y = respawnPoints[1].y - object.height;
+	                        }
+	                }, false, 0);
+	                //object.kill();
+				}
+			} else if (tile.index == 7) {
 				FlxG.log("x "+tile.x+" y "+ tile.y);
 				FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
 				if (level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)) == 6) {
@@ -153,9 +209,16 @@ package
 					//FlxG.log("num"+level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)));
 					level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35),0,true);
 				}
+			} else {
+				if (tile.index != 5) FlxG.collide(tile, object);
 			}
-				
-			FlxG.collide(tile, object);
+			
+		}
+		
+		// goes to respawn point at screen 
+		private function gotoScreen(screen:Number):void
+		{
+        
 		}
 			
 		override public function draw():void
@@ -185,6 +248,7 @@ package
 		
 		public function swapMap(levelData:Array):Array
 		{
+		    bottomText.text = "floor " + (levelCounter+2);
 			var levelDataTmp:Array = new Array(WORKING_ARRAY_SIZE);
 			var i:int;
 			// neue erste haelfte

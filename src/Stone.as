@@ -17,6 +17,8 @@ package
 			addAnimation("fall", new Array(6,6,6), 3, true);
 		}
 		
+		
+		
 		override public function update():void
 		{
 			acceleration.x = 0;
