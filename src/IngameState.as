@@ -58,7 +58,6 @@
 			level.cameras = [gameCamera];
 
 			add(level);
-			
 			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
 			gameCamera.scroll.y = HEIGHT;
 
@@ -95,7 +94,7 @@
 			} else {
 				if (playerScreenY + player.height < HEIGHT && 
 					playerScreenY + player.height > TILESIZE) {
-						FlxG.collide(level,player);
+						FlxG.collide(level, player, player.touched);
 					}
 			}
 			
@@ -103,7 +102,7 @@
 			if (player.x < TM_OFFSET) {
 				player.x = TM_OFFSET;
 				player.velocity.x = -player.velocity.x;
-				player.velocity.y = player.velocity.y-10;
+				player.velocity.y = player.velocity.y-20;
 			}
 			if (player.x + player.width > TM_WIDTH - TM_OFFSET) {
 				player.x = TM_WIDTH - TM_OFFSET - player.width;
