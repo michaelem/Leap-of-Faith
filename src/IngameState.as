@@ -83,6 +83,8 @@
 			add(text);
 			
 			gameCamera.setBounds(0, 0, TM_WIDTH, TM_HEIGHT);
+			gameCamera.follow(player);		
+			gameCamera.deadzone = new FlxRect(0, 100, WIDTH, HEIGHT-100);
 		}
 		
 		override public function update():void
@@ -103,24 +105,11 @@
 				player.x = TM_WIDTH - TM_OFFSET - player.width;
 				player.velocity.x = -player.velocity.x;
 			}
-			cameraflow();
 		}
 		
 		override public function draw():void
 		{
 			super.draw();
-		}
-		
-		public function cameraflow():void
-		{
-			//FlxG.cameras[1].setBounds(0, 0, WIDTH, HEIGHT*2)
-			var player_y:uint = player.y - gameCamera.scroll.y;
-			/*if (player_y < HEIGHT / 2 && player.isTouching(FlxObject.FLOOR)) {
-				gameCamera.follow(player, FlxCamera.STYLE_TOPDOWN)
-			} else {
-				gameCamera.target = null;
-			}*/
-			
 		}
 	}
 }
