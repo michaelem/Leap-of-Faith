@@ -26,6 +26,9 @@
 		private var levelData:Array;
 		private var levelCounter:int;
 		private var player:Player;
+		private var background:Background;
+		
+		private var progress:Number = 0;
 		
 		private var camera:Camera;
 		
@@ -43,30 +46,33 @@
 			FlxG.bgColor = 0xffaaaaaa;
 			borderCamera.bgColor = 0x00000000;
 			
+			background = new Background([gameCamera]);
+			add(background);
+
 			level = new FlxTilemap();
 			levelCounter = 0;
 			
 			levelData = new Array();
 			initMap();
 			level.loadMap(FlxTilemap.arrayToCSV(levelData,13), ImgTiles, 35, 35, FlxTilemap.OFF);
+			level.cameras = [gameCamera];
 
-			level.cameras = new Array(gameCamera);
 			add(level);
 			
 			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
 			gameCamera.scroll.y = HEIGHT;
 
 			player.x -= player.width/2;
-			player.cameras = new Array(gameCamera);
+			player.cameras = [gameCamera];
 			add(player);
 			
 			border = new FlxSprite(0, 0, ImgBorder);
-			border.cameras = new Array(borderCamera);
+			border.cameras = [borderCamera];
 			add(border);
 			
 			bottomText = new FlxText(50, 500, 500, "leap of faith");
             bottomText.setFormat("aaaiight", 65, 0x00000000, "left");
-			bottomText.cameras = new Array(borderCamera);
+			bottomText.cameras = [borderCamera];
 			add(bottomText);
 			
 			gameCamera.setBounds(0, 0, TM_WIDTH, TM_HEIGHT);
@@ -78,8 +84,8 @@
 		}
 		
 		override public function update():void
-		{	
-			super.update();
+		{				
+			background.scroll = progress * 0.6;
 			
 			var playerScreenY:int = player.y - gameCamera.scroll.y;
 			
@@ -88,7 +94,7 @@
 				player.y -= playerScreenY + player.height;
 			} else {
 				if (playerScreenY + player.height < HEIGHT && 
-					playerScreenY + player.height > TILESIZE * 2) {
+					playerScreenY + player.height > TILESIZE) {
 						FlxG.collide(level,player);
 					}
 			}
@@ -109,9 +115,13 @@
 				levelData = swapMap(levelData);
 				level.loadMap(FlxTilemap.arrayToCSV(levelData,13), ImgTiles, 35, 35, FlxTilemap.OFF);
 				player.y += HEIGHT;
+				player.last.y += HEIGHT;
 				gameCamera.scroll.y += HEIGHT;
 			}
 			
+			var oldScrollPos:Number = gameCamera.scroll.y;
+			super.update();
+			progress += oldScrollPos - gameCamera.scroll.y;
 		}
 		
 		override public function draw():void
