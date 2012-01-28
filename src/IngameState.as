@@ -10,6 +10,7 @@ package
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
 		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
+		[Embed(source="../assets/Explosion34.mp3"] private var SndExplosion:Class;
 		
 		private static const WIDTH:uint = 440;
 		private static const HEIGHT:uint = 450;
