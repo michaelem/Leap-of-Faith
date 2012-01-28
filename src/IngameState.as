@@ -6,6 +6,7 @@
 	{
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
 		[Embed(source="../assets/tiles.png")] private static var ImgTiles:Class;
+		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		
 		private static const WIDTH:uint = 440;
 		private static const HEIGHT:uint = 450;
@@ -22,8 +23,11 @@
 		private var player:FlxSprite;
 		private var levelData1:Array;
 		private var levelData2:Array;
+		private var player:Player;
 		
-		private var text:FlxText;
+		private var camera:Camera;
+		
+		private var bottomText:FlxText;
 		
 		override public function create():void
 		{	
@@ -72,7 +76,9 @@
 			level.cameras = new Array(gameCamera);
 			add(level);
 			
-			player = new Player(TM_WIDTH/2, (TM_HEIGHT/4) * 3);
+			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
+			gameCamera.scroll.y = HEIGHT;
+
 			player.x -= player.width/2;
 			player.cameras = new Array(gameCamera);
 			add(player);
@@ -81,26 +87,36 @@
 			border.cameras = new Array(borderCamera);
 			add(border);
 			
-			text = new FlxText(0, 0, 100, "Text");
-			text.color = 0xffff0000;
-			text.cameras = new Array(borderCamera);
-			add(text);
+			bottomText = new FlxText(50, 500, 500, "leap of faith");
+            bottomText.setFormat("aaaiight", 65, 0x00000000, "left");
+			bottomText.cameras = new Array(borderCamera);
+			add(bottomText);
 			
 			gameCamera.setBounds(0, 0, TM_WIDTH, TM_HEIGHT);
-			gameCamera.follow(player);		
-			gameCamera.deadzone = new FlxRect(0, 100, WIDTH, HEIGHT-100);
+			//gameCamera.follow(player);		
+			//gameCamera.deadzone = new FlxRect(0, 100, WIDTH, HEIGHT);
+			
+			camera = new Camera(gameCamera, player);
+			add(camera);
 		}
 		
 		override public function update():void
-		{
+		{	
 			super.update();
+			
+			var playerScreenY:int = player.y - gameCamera.scroll.y;
+			
 			// IF FALLING DOWN, OUTSIDE THE SCREEN
-			if (player.y > HEIGHT*2 + 10) {
-				//player.y = player.y - HEIGHT*2;
+			if (playerScreenY > HEIGHT) {
+				player.y -= playerScreenY + player.height;
+			} else {
+				if (playerScreenY + player.height < HEIGHT && 
+					playerScreenY + player.height > TILESIZE * 2) {
+						FlxG.collide(level,player);
+					}
 			}
 			
 			// COLLISION
-			FlxG.collide(level,player);
 			if (player.x < TM_OFFSET) {
 				player.x = TM_OFFSET;
 				player.velocity.x = -player.velocity.x;
