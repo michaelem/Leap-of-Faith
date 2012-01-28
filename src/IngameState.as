@@ -8,7 +8,6 @@ package
 	public class IngameState extends FlxState
 	{
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
-		[Embed(source="../assets/clouds.png")] private static var ImgClouds:Class;
 		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		
@@ -21,14 +20,13 @@ package
 		private static const TM_OFFSET:uint = (TM_WIDTH - WIDTH) / 2;
 		private static const START_SCREEN:uint = 0;
 
-		
 		private static const WORKING_ARRAY_SIZE:int = 338;
 		private static const WORKING_ARRAY_SIZE_HALF:int = 169;
 		
 		private var borderCamera:FlxCamera;
 		private var gameCamera:FlxCamera;
 		private var border:FlxSprite;
-		private var clouds:FlxSprite;
+		private var clouds:Clouds;
 		private var level:FlxTilemap;
 		private var levelData:Array;
 		private var levelCounter:int;
@@ -72,6 +70,10 @@ package
 			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
 			gameCamera.scroll.y = HEIGHT;
 
+			clouds = new Clouds();
+			clouds.setCameras([gameCamera]);
+			add(clouds);
+
 			player.x -= player.width/2;
 			player.cameras = [gameCamera];
 			add(player);
@@ -79,10 +81,6 @@ package
 			border = new FlxSprite(0, 0, ImgBorder);
 			border.cameras = [borderCamera];
 			add(border);
-			
-			clouds = new FlxSprite(0, 30, ImgClouds);
-			clouds.cameras = [borderCamera];
-			add(clouds);
 			
 			// "leap of faith" - bottomText
 			bottomText = new FlxText(50, 500, 500, "leap of faith");
@@ -151,7 +149,6 @@ package
 				levelData = swapMap(levelData);
 				level.loadMap(FlxTilemap.arrayToCSV(levelData,13), ImgTiles, 35, 35, FlxTilemap.OFF);
 				player.y += TM_HEIGHT/2;
-				
 				player.last.y += TM_HEIGHT/2;
 				gameCamera.scroll.y += TM_HEIGHT/2;
 				
@@ -171,9 +168,6 @@ package
 			var oldScrollPos:Number = gameCamera.scroll.y;
 			super.update();
 			progress += oldScrollPos - gameCamera.scroll.y;
-			
-			
-			
 		}
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
