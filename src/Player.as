@@ -24,7 +24,6 @@ package
 			addAnimation("idle", new Array(0), 1, true);
 		}
 		
-
 		override public function update():void
 		{
 			// MOVEMENT

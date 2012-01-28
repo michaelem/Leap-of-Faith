@@ -1,4 +1,4 @@
-	package
+package
 {
 	import org.flixel.*;
 	import org.flixel.system.FlxTile;
@@ -30,6 +30,8 @@
 		private var levelCounter:int;
 		private var player:Player;
 		private var background:Background;
+		
+		private var stones:FlxGroup;
 		
 		private var progress:Number = 0;
 		
@@ -83,6 +85,17 @@
 			
 			camera = new Camera(gameCamera, player);
 			add(camera);
+			
+			stones = new FlxGroup();
+			stones.cameras = [gameCamera];
+			add(stones);
+			
+			// check collision
+			// spawn
+			// fly
+			// destroy
+			//FlxG.collide(level, player, player.touched);
+			//createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
 		}
 		
 		override public function update():void
@@ -132,12 +145,20 @@
 		{
 			if (tile.index == 4)	//The player will bounce if he collides with a bouncy block.
 				object.kill();
+			if (tile.index == 2)
+				createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
 			FlxG.collide(tile, object);
 		}
 		
 		override public function draw():void
 		{
 			super.draw();
+		}
+		
+		public function createStone(X:uint,Y:uint):void
+		{
+			var stone:Stone = new Stone(X,Y);
+			stones.add(stone);
 		}
 		
 		public function initMap():void
