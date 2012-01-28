@@ -3,8 +3,7 @@
 	
 	public class Screens
 	{
-
-    
+	
 private static var screen_005:Array = new Array(
     0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
