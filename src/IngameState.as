@@ -70,7 +70,7 @@
 				0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0,
 				0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1 );
 			levelData2 = new Array();
-			level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.AUTO);
+			level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.OFF);
 
 			level.cameras = new Array(gameCamera);
 			add(level);
@@ -128,7 +128,7 @@
 			// LOAD MAP
 			if (gameCamera.scroll.y == 0) {
 				levelData1 = swapMap(levelData1);
-				level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.AUTO);
+				level.loadMap(FlxTilemap.arrayToCSV(levelData1,13), ImgTiles, 35, 35, FlxTilemap.OFF);
 				player.y += HEIGHT;
 				gameCamera.scroll.y += HEIGHT;
 			}
