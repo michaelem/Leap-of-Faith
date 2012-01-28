@@ -1,6 +1,7 @@
 	package
 {
 	import org.flixel.*;
+	import org.flixel.system.FlxTile;
 	
 	public class IngameState extends FlxState
 	{
@@ -15,7 +16,7 @@
 		private static const TM_WIDTH:uint = TILESIZE * 13;
 		private static const TM_HEIGHT:uint = TILESIZE * 26;
 		private static const TM_OFFSET:uint = (TM_WIDTH - WIDTH) / 2;
-		private static const START_SCREEN:uint = 5;
+		private static const START_SCREEN:uint = 0;
 		
 		private static const WORKING_ARRAY_SIZE:int = 338;
 		private static const WORKING_ARRAY_SIZE_HALF:int = 169;
@@ -95,7 +96,7 @@
 			} else {
 				if (playerScreenY + player.height < HEIGHT && 
 					playerScreenY + player.height > TILESIZE) {
-						FlxG.collide(level, player, player.touched);
+						level.overlapsWithCallback(player, levelCollision);
 					}
 			}
 			
@@ -122,6 +123,15 @@
 			var oldScrollPos:Number = gameCamera.scroll.y;
 			super.update();
 			progress += oldScrollPos - gameCamera.scroll.y;
+			
+			
+		}
+		
+		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
+		{
+			if (tile.index == 4)	//The player will bounce if he collides with a bouncy block.
+				object.kill();
+			FlxG.collide(tile, object);
 		}
 		
 		override public function draw():void

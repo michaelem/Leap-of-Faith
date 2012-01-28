@@ -25,26 +25,7 @@ package
 			addAnimation("idle", new Array(0), 1, true);
 		}
 		
-		public function collide() {
-			
-		}
-		public function touched(object:FlxObject, player:FlxObject): void
-		{
-            if (player.isTouching(FlxObject.FLOOR)) {
-                //player.flicker();
-                FlxG.log(object);
-				
-				object.
-                /*
-                if (object.index == 4) {
-                    player.flicker();
-                } else {
-                    player.flicker();
-                }*/
-                
-            }
-		}
-		
+	
 		override public function update():void
 		{
 			// MOVEMENT
