@@ -1,2 +1,9 @@
 Stage with border is: 500x600  
 Stage inside (game stage) is: 440x450
+
+Tiles:
+0 - leer
+1 - linkes ende (schwarz)
+2 - mitte (schwarz)
+3 - rechtes ende (schwarz)
+4 - spike (rot)
