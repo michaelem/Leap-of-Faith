@@ -20,7 +20,6 @@
 		private var gameCamera:FlxCamera;
 		private var border:FlxSprite;
 		private var level:FlxTilemap;
-		private var player:FlxSprite;
 		private var levelData1:Array;
 		private var levelData2:Array;
 		private var player:Player;
