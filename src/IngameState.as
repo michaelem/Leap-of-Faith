@@ -221,10 +221,12 @@ package
 			}
 			
 			var oldScrollPos:Number = gameCamera.scroll.y;
-			super.update();
+			
 			progress += oldScrollPos - gameCamera.scroll.y;
 			
 			timer();
+			
+			super.update();
 		}
 		
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
@@ -261,8 +263,7 @@ package
 		}
 		
 		private function timer():void {
-
-			if (levelCounter < 14 ) {
+			if (levelCounter < 13 ) {
 				timeCounter += FlxG.elapsed;
 			} else {
 				if (!end) {
