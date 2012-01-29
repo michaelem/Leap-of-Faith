@@ -215,12 +215,15 @@ package
 		
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
 		{
+			if (stone.isHit) return;
 			player.pain = true;
+			stone.hit();
 		}
 		
 		private function stoneLevelCollision(stone:Stone, level:FlxTilemap):void	//function called when player touches a bouncy block
 		{
-			stone.kill();
+			if (stone.isHit) return;
+			stone.hit();
 		}
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
@@ -228,7 +231,7 @@ package
 			if (tile.index == 4 && object is Player && !((object as Player).pain)) {
 				var r1:FlxRect = new FlxRect(object.x, object.y, object.width, object.height);
 				var r2:FlxRect = new FlxRect(tile.x + 10, tile.y + 5, tile.width - 20, tile.height - 5);
-				if ( object.y - object.last.y > 0.1 && object.y + object.height < tile.y + tile.height && r1.overlaps(r2) ) 	//The player will bounce if he collides with a bouncy block.
+				if ( object.y - object.last.y > 0.1 && object.y + object.height < tile.y + tile.height - 2 && r1.overlaps(r2) ) 	//The player will bounce if he collides with a bouncy block.
 				{
 					var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
 					sprite.cameras=[gameCamera];

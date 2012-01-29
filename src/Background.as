@@ -23,11 +23,10 @@ package
 			update();
 		}
 		
-		public function setCameras(cameras:Array):void
+		override public function setCameras(CAMERAS:Array):void
 		{
-			bg1.cameras = cameras;
-			bg2.cameras = cameras;
-			camera = cameras[0];
+			camera = CAMERAS[0];
+			super.setCameras(CAMERAS);
 		}
 		
 		override public function update():void
