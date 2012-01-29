@@ -77,7 +77,7 @@ package
 			level.cameras = [gameCamera];
 			add(level);
 			
-			insertCredits();
+			//insertCredits();
 			
 			player = new Player(20, TM_HEIGHT-120);
 			gameCamera.scroll.y = HEIGHT;
@@ -162,7 +162,7 @@ package
 			
 			FlxG.collide(stones, player, stonePlayerCollision);
 			FlxG.collide(stones, level, stoneLevelCollision);
-			FlxG.overlap(credits, player, creditPlayerCollision);
+			//FlxG.overlap(credits, player, creditPlayerCollision);
 			
 			
 			// LOAD MAP
@@ -182,7 +182,7 @@ package
 						}
 					}
 				}	// remove old sprites		
-				insertCredits();		
+				//insertCredits();		
 			}
 			
 			if (player.pain && player.isDead()) {
@@ -330,7 +330,6 @@ package
 		
 		public function insertCredits():void
 		{
-			//return;
 		    // insert credits
 			if (credits != null) {
 				credits.clear();
