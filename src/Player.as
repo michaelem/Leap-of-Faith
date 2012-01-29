@@ -9,6 +9,7 @@ package
 		private var mayJump:Boolean;
 		public var pain:Boolean;
 		private var painCounter:Number;
+		private var jumpgo:Boolean;
 		
 		public function Player(X:Number, Y:Number):void
 		{
@@ -22,10 +23,13 @@ package
 			offset = new FlxPoint(4, 6);
 			width = 16;
 			height = 40;
-			addAnimation("runRight", new Array(1,2,3,4,5,6), 10, true);
-			addAnimation("runLeft", new Array(1,2,3,4,5,6), 10, true);
-			addAnimation("idle", new Array(0), 1, true);
+			addAnimation("run", new Array(1,2,3,4,5,6), 10, true);
+			addAnimation("jumpgo", new Array(7,7), 20, false);
+			addAnimation("jump", new Array(8,9), 10, true);
+			addAnimation("pain", new Array(10,11), 10, true);
+			addAnimation("idle", new Array(0,0), 1, true);
 			painCounter = 0;
+			jumpgo = false;
 		}
 		
 		public function isDead():Boolean
@@ -43,33 +47,43 @@ package
 		override public function update():void
 		{
 			if (pain) {
-				acceleration.y = 0;
-				velocity.y = 0;
-				x += Math.random() * 10 - 5;
-				y += Math.random() * 10 - 5;
+				acceleration.x = 0;
+				x += Math.random() * 6 - 3;
+				y += Math.random() * 2 - 1;
 				painCounter += FlxG.elapsed;
+				play("pain");
 				return;
 			}
 			// MOVEMENT
 			acceleration.x = 0;
+
 			if (FlxG.keys.LEFT) {
 				acceleration.x = -maxVelocity.x*4;
 				facing = FlxObject.RIGHT;
-				play("runLeft");
 			} else if (FlxG.keys.RIGHT) {
 				acceleration.x = maxVelocity.x*4;
 				facing = FlxObject.LEFT;
-				play("runRight");
-			} else {
-				play("idle");
+			}
+			
+			if (isTouching(FlxObject.FLOOR) && !jumpgo) {	
+				if (FlxG.keys.LEFT || FlxG.keys.RIGHT) {
+					play("run");
+				} else {
+					play("idle");
+				}
 			}
 			if(FlxG.keys.justReleased("SPACE")) {
 				mayJump = true;
 			}
-			if(FlxG.keys.SPACE && mayJump && isTouching(FlxObject.FLOOR)) {
-				//FlxG.play(SndJump);
+			if (jumpgo && finished) {
 				velocity.y = -maxVelocity.y;
+				jumpgo = false;
+				play("jump");
+			} else if(FlxG.keys.SPACE && mayJump && isTouching(FlxObject.FLOOR)) {
+				//FlxG.play(SndJump);
 				mayJump = false;
+				jumpgo = true;
+				play("jumpgo");
 			}
 		}
 	}

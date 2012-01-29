@@ -11,6 +11,8 @@ package
 		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		[Embed(source="../assets/Explosion34.mp3")] private var SndExplosion:Class;
+		[Embed(source="../assets/woosh.mp3")] private var SndWoosh:Class;
+
 		
 		private static const WIDTH:uint = 440;
 		private static const HEIGHT:uint = 450;
@@ -128,11 +130,11 @@ package
 			
 			// IF FALLING DOWN, OUTSIDE THE SCREEN
 			if (playerScreenY > HEIGHT) {
+				FlxG.play(SndWoosh);
 				player.y -= playerScreenY + player.height;
 			} else {
 				if (playerScreenY + player.height < HEIGHT && 
-					playerScreenY + player.height > TILESIZE &&
-					!player.pain) {
+					playerScreenY + player.height > TILESIZE) {
 						level.overlapsWithCallback(player, levelCollision);
 					}
 			}
@@ -229,12 +231,13 @@ package
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
 		{
 			if (tile.index == 4 && object is Player && !((object as Player).pain)) {
-				if ( (Math.abs(tile.x-object.x) < 25) && (tile.y-object.y>0) && (tile.y-object.y<30) ) 	//The player will bounce if he collides with a bouncy block.
+				var r1:FlxRect = new FlxRect(object.x, object.y, object.width, object.height);
+				var r2:FlxRect = new FlxRect(tile.x + 10, tile.y + 5, tile.width - 20, tile.height - 5);
+				if ( object.y - object.last.y > 0.1 && object.y + object.height < tile.y + tile.height && r1.overlaps(r2) ) 	//The player will bounce if he collides with a bouncy block.
 				{
 					var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
 					sprite.cameras=[gameCamera];
 					spritesFromTiles.add(sprite)
-					
 					FlxG.play(SndExplosion);
 					(object as Player).pain = true;
 					(object as Player).y += 10;
