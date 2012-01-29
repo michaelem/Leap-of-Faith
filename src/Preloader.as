@@ -1,10 +1,12 @@
 package
 {
+	import mochi.as3.*;
     import org.flixel.system.FlxPreloader;
     public class Preloader extends FlxPreloader
     {
         public function Preloader():void
         {
+			MochiServices.connect("4e6057591114dac9", root);
             className = "main";
             super();
         }
