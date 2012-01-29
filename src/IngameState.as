@@ -131,6 +131,7 @@ package
 			add(spritesFromTiles);
 			
 			endTimer = new FlxTimer();
+
 			end = false;
 			
 			//createCredit(100, TM_HEIGHT-120)
@@ -262,7 +263,7 @@ package
 		}
 		
 		private function timer():void {
-				if (levelCounter < 12 ) {
+			if (levelCounter < 13 ) {
 				timeCounter += FlxG.elapsed;
 			} else {
 				if (!end) {
