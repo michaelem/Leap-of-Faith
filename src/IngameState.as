@@ -69,7 +69,7 @@ package
 			level.cameras = [gameCamera];
 
 			add(level);
-			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
+			player = new Player(20, TM_HEIGHT-120);
 			gameCamera.scroll.y = HEIGHT;
 
 			clouds = new Clouds();
@@ -104,7 +104,6 @@ package
 			add(camera);
 			
 			stones = new FlxGroup();
-			stones.cameras = [gameCamera];
 			add(stones);
 			
 			// check collision
@@ -134,6 +133,15 @@ package
 					!player.pain) {
 						level.overlapsWithCallback(player, levelCollision);
 					}
+			}
+			
+			for each (var w:FlxSprite in stones.members) {
+				if (w != null) {
+					//FlxG.log(w.getScreenXY().y);
+						if (w.getScreenXY().y > HEIGHT) {
+							w.y -= TM_HEIGHT/2;
+						}
+				}
 			}
 			
 			// COLLISION
@@ -166,6 +174,12 @@ package
 					}
 				}
 				
+				for each (var q:FlxSprite in stones.members) {
+					if (q != null) {
+							q.y += TM_HEIGHT/2;
+					}
+				}
+				
 			}
 			
 			if (player.pain && player.isDead()) {
@@ -195,22 +209,52 @@ package
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
 		{
-			if (tile.index == 4 && object is Player && !((object as Player).pain))
-			{
-                //bottomText.text="killed at floor " + (levelCounter+2);
+			if (tile.index == 4 && object is Player && !((object as Player).pain)) {
+				if ( (Math.abs(tile.x-object.x) < 25) && (tile.y-object.y>0) && (tile.y-object.y<30) ) 	//The player will bounce if he collides with a bouncy block.
+				{
+					var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
+					sprite.cameras=[gameCamera];
+					spritesFromTiles.add(sprite)
+					
+					FlxG.play(SndExplosion);
+					(object as Player).pain = true;
+					(object as Player).y += 10;
+	                //object.kill();
+				}
+			} else if (tile.index == 7) {
+				FlxG.log("x "+tile.x+" y "+ tile.y);
+				FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+				if (level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)) == 6) {
+					createStone(tile.x, tile.y+35);
+					//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+					//FlxG.log("num"+level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)));
+					level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35),0,true);
+				}
+				FlxG.collide(tile, object);
+			} 	else if (tile.index == 7) {
+					FlxG.log("x "+tile.x+" y "+ tile.y);
+					FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+					if (level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)) == 6) {
+						createStone(tile.x, tile.y+35);
+						//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+						//FlxG.log("num"+level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)));
+						level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35),0,true);
+					}
+					FlxG.collide(tile, object);
+			} 	else if (tile.index == 6) {
+							//FlxG.log("x "+tile.x+" y "+ tile.y);
+							//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+				createStone(tile.x, tile.y);
+								//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+								//FlxG.log("num"+level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)));
+				level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y),0,true);
 				
-                FlxG.play(SndExplosion);
-                (object as Player).pain = true;
-                (object as Player).y += 10;
-                //object.kill();
+				FlxG.collide(tile, object);
+							
+			} else {
+				if (tile.index != 5) FlxG.collide(tile, object);
 			}
-				
-            if (tile.index == 5)
-                return;
-			//if (tile.index == 3)
-			//	createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
-
-			FlxG.collide(tile, object);
+			
 		}
 		
 		// goes to respawn point at screen 
@@ -218,7 +262,7 @@ package
 		{
         
 		}
-		
+			
 		override public function draw():void
 		{
 			super.draw();
@@ -227,6 +271,7 @@ package
 		public function createStone(X:uint,Y:uint):void
 		{
 			var stone:Stone = new Stone(X,Y);
+			stone.cameras = [gameCamera];
 			stones.add(stone);
 		}
 		
@@ -261,5 +306,11 @@ package
 			return levelDataTmp;
 		}
 		
+		public function getIndexByWorldCoords(x:int,y:int):int
+		{
+			var tX:int = FlxU.floor(x/TILESIZE)
+			var tY:int = FlxU.floor(y/TILESIZE) 
+			return tY * 13 + tX;
+		}
 	}
 }
