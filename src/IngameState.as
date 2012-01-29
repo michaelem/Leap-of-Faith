@@ -11,6 +11,8 @@ package
 		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		[Embed(source="../assets/Explosion34.mp3")] private var SndExplosion:Class;
+		[Embed(source="../assets/woosh.mp3")] private var SndWoosh:Class;
+
 		
 		private static const WIDTH:uint = 440;
 		private static const HEIGHT:uint = 450;
@@ -126,6 +128,7 @@ package
 			
 			// IF FALLING DOWN, OUTSIDE THE SCREEN
 			if (playerScreenY > HEIGHT) {
+				FlxG.play(SndWoosh);
 				player.y -= playerScreenY + player.height;
 			} else {
 				if (playerScreenY + player.height < HEIGHT && 
