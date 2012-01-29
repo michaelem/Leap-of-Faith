@@ -55,7 +55,6 @@ package
 				particles.at(this);
 			}
 			particles.update();
-			particlesTimer.update();
 		}
 		
 		override public function draw():void
