@@ -61,6 +61,14 @@ package org.flixel
 			_sortIndex = null;
 		}
 		
+		public function setCameras(CAMERAS:Array):void
+		{
+			cameras = CAMERAS;
+			for (var i:int = 0; i < members.length; i++) {
+				members[i].cameras = CAMERAS;
+			}
+		}
+		
 		/**
 		 * Override this function to handle any deleting or "shutdown" type operations you might need,
 		 * such as removing traditional Flash children like Sprite objects.

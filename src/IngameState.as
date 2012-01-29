@@ -51,6 +51,7 @@ package
 		private var camera:Camera;
 		
 		private var bottomText:FlxText;
+		private var bottomText2:FlxText;
 		
 		private var timeCounter:Number = 0;
 	 
@@ -107,7 +108,7 @@ package
 			
 			// "floor xy" - bottomtext aaaiight
 			bottomText = new FlxText(35, 500, 500, "Floor 1");
-			bottomText.setFormat("MostlyMono",25, 0x00000000, "left");
+			bottomText.setFormat("aaaiight",25, 0x00000000, "left");
 			bottomText.cameras = [borderCamera];
 			add(bottomText);
 			
@@ -220,13 +221,18 @@ package
 		
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
 		{
+			if (stone.isHit) return;
 			player.pain = true;
+			stone.hit();
 			FlxG.play(SndRatsch);
 		}
 		
 		private function stoneLevelCollision(stone:Stone, level:FlxTilemap):void	//function called when player touches a bouncy block
 		{
-			stone.kill();
+			var stoneScreenY:int = stone.y - gameCamera.scroll.y;
+			if (stoneScreenY + stone.height < TILESIZE) return;
+			if (stone.isHit) return;
+			stone.hit();
 			FlxG.play(SndRatsch);
 		}
 		
@@ -240,14 +246,34 @@ package
 		}
 		
 		private function timer():void {
-			timeCounter += FlxG.elapsed;
+			if (levelCounter < 14 ) {
+				timeCounter += FlxG.elapsed;
+			}
 			var tSeconds:int = FlxU.floor(timeCounter)%60;
 			var tMinutes:int = FlxU.floor(FlxU.floor(timeCounter)/60);
 			var tMillisec:int = (timeCounter%1)*100;
-			var tTime:String = "";
-			
-			bottomText.text = "time: "+tMinutes+":"+tSeconds+":"+tMillisec;
-
+			var tTime:String = "time: ";
+			if (tSeconds < 10) {
+				tTime += "00"+tSeconds;
+			} else if (tSeconds < 100) {
+				tTime += "0"+tSeconds;
+			} else {
+				tTime += tSeconds;
+			}
+			tTime += " : ";
+			if (tSeconds < 10) {
+				tTime += "0"+tSeconds;
+			} else {
+				tTime += tSeconds;
+			}
+			tTime += " : ";
+			if (tMillisec < 10) {
+				tTime += "0"+tMillisec;
+			} else {
+				tTime += tMillisec;
+			}
+		
+			bottomText.text = tTime;
 		}
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
@@ -255,7 +281,7 @@ package
 			if (tile.index == 4 && object is Player && !((object as Player).pain)) {
 				var r1:FlxRect = new FlxRect(object.x, object.y, object.width, object.height);
 				var r2:FlxRect = new FlxRect(tile.x + 10, tile.y + 5, tile.width - 20, tile.height - 5);
-				if ( object.y - object.last.y > 0.1 && object.y + object.height < tile.y + tile.height && r1.overlaps(r2) ) 	//The player will bounce if he collides with a bouncy block.
+				if ( object.y - object.last.y > 0.1 && object.y + object.height < tile.y + tile.height - 2 && r1.overlaps(r2) ) 	//The player will bounce if he collides with a bouncy block.
 				{
 					var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
 					sprite.cameras=[gameCamera];
