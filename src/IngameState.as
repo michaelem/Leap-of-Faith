@@ -134,15 +134,6 @@ package
 					}
 			}
 			
-			for each (var w:FlxSprite in stones.members) {
-				if (w != null) {
-					//FlxG.log(w.getScreenXY().y);
-						if (w.getScreenXY().y > HEIGHT) {
-							w.y -= TM_HEIGHT/2;
-						}
-				}
-			}
-			
 			// COLLISION
 			if (player.x < TM_OFFSET) {
 				player.x = TM_OFFSET;
@@ -153,6 +144,19 @@ package
 				player.x = TM_WIDTH - TM_OFFSET - player.width;
 				player.velocity.x = -player.velocity.x;
 			}
+			
+			for each (var w:FlxSprite in stones.members) {
+				if (w != null) {
+					//FlxG.log(w.getScreenXY().y);
+						if (w.getScreenXY().y > HEIGHT) {
+							w.y -= TM_HEIGHT/2;
+						}
+				}
+			}
+			
+			FlxG.collide(stones, player, stonePlayerCollision);
+			FlxG.collide(stones, level, stoneLevelCollision);
+			
 			
 			// LOAD MAP
 			if (gameCamera.scroll.y == 0) {
@@ -206,6 +210,16 @@ package
 			progress += oldScrollPos - gameCamera.scroll.y;
 		}
 		
+		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
+		{
+			player.pain = true;
+		}
+		
+		private function stoneLevelCollision(stone:Stone, level:FlxTilemap):void	//function called when player touches a bouncy block
+		{
+			stone.kill();
+		}
+		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
 		{
 			if (tile.index == 4 && object is Player && !((object as Player).pain)) {
@@ -216,7 +230,6 @@ package
 					var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
 					sprite.cameras=[gameCamera];
 					spritesFromTiles.add(sprite)
-					
 					FlxG.play(SndExplosion);
 					(object as Player).pain = true;
 					(object as Player).y += 10;
@@ -232,17 +245,7 @@ package
 					level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35),0,true);
 				}
 				FlxG.collide(tile, object);
-			} 	else if (tile.index == 7) {
-					FlxG.log("x "+tile.x+" y "+ tile.y);
-					FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
-					if (level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)) == 6) {
-						createStone(tile.x, tile.y+35);
-						//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
-						//FlxG.log("num"+level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)));
-						level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35),0,true);
-					}
-					FlxG.collide(tile, object);
-			} 	else if (tile.index == 6) {
+			} else if (tile.index == 6) {
 							//FlxG.log("x "+tile.x+" y "+ tile.y);
 							//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
 				createStone(tile.x, tile.y);
