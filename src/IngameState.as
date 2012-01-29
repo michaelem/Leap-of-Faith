@@ -68,7 +68,7 @@ package
 			level.cameras = [gameCamera];
 
 			add(level);
-			player = new Player(TM_WIDTH/2, TM_HEIGHT*3/4);
+			player = new Player(20, TM_HEIGHT-120);
 			gameCamera.scroll.y = HEIGHT;
 
 			clouds = new Clouds();
@@ -103,7 +103,6 @@ package
 			add(camera);
 			
 			stones = new FlxGroup();
-			stones.cameras = [gameCamera];
 			add(stones);
 			
 			// check collision
@@ -134,6 +133,15 @@ package
 					}
 			}
 			
+			for each (var w:FlxSprite in stones.members) {
+				if (w != null) {
+					//FlxG.log(w.getScreenXY().y);
+						if (w.getScreenXY().y > HEIGHT) {
+							w.y -= TM_HEIGHT/2;
+						}
+				}
+			}
+			
 			// COLLISION
 			if (player.x < TM_OFFSET) {
 				player.x = TM_OFFSET;
@@ -161,6 +169,12 @@ package
 							spritesFromTiles.remove(s);
 							remove(s);
 						}
+					}
+				}
+				
+				for each (var q:FlxSprite in stones.members) {
+					if (q != null) {
+							q.y += TM_HEIGHT/2;
 					}
 				}
 				
@@ -210,6 +224,26 @@ package
 					level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35),0,true);
 				}
 				FlxG.collide(tile, object);
+			} 	else if (tile.index == 7) {
+					FlxG.log("x "+tile.x+" y "+ tile.y);
+					FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+					if (level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)) == 6) {
+						createStone(tile.x, tile.y+35);
+						//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+						//FlxG.log("num"+level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)));
+						level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35),0,true);
+					}
+					FlxG.collide(tile, object);
+			} 	else if (tile.index == 6) {
+							//FlxG.log("x "+tile.x+" y "+ tile.y);
+							//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+				createStone(tile.x, tile.y);
+								//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
+								//FlxG.log("num"+level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)));
+				level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y),0,true);
+				
+				FlxG.collide(tile, object);
+							
 			} else {
 				if (tile.index != 5) FlxG.collide(tile, object);
 			}
@@ -230,6 +264,7 @@ package
 		public function createStone(X:uint,Y:uint):void
 		{
 			var stone:Stone = new Stone(X,Y);
+			stone.cameras = [gameCamera];
 			stones.add(stone);
 		}
 		
