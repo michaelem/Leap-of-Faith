@@ -29,14 +29,10 @@ package
 			xOffset1 = xOffset2 = 0;
 		}
 		
-		public function setCameras(CAMERAS:Array):void
+		override public function setCameras(CAMERAS:Array):void
 		{
-			cameras = CAMERAS;
-			img1.cameras = cameras;
-			img2.cameras = cameras;
-			img3.cameras = cameras;
-			img4.cameras = cameras;
-			camera = cameras[0];
+			super.setCameras(CAMERAS);
+			camera = CAMERAS[0];
 		}
 		
 		override public function update():void
