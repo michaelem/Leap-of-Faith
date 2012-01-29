@@ -51,6 +51,7 @@ package
 		private var camera:Camera;
 		
 		private var bottomText:FlxText;
+		private var bottomText2:FlxText;
 		
 		private var timeCounter:Number = 0;
 	 
@@ -107,7 +108,7 @@ package
 			
 			// "floor xy" - bottomtext aaaiight
 			bottomText = new FlxText(35, 500, 500, "Floor 1");
-			bottomText.setFormat("MostlyMono",25, 0x00000000, "left");
+			bottomText.setFormat("aaaiight",25, 0x00000000, "left");
 			bottomText.cameras = [borderCamera];
 			add(bottomText);
 			
@@ -240,13 +241,34 @@ package
 		}
 		
 		private function timer():void {
-			timeCounter += FlxG.elapsed;
+			if (levelCounter < 14 ) {
+				timeCounter += FlxG.elapsed;
+			}
 			var tSeconds:int = FlxU.floor(timeCounter)%60;
 			var tMinutes:int = FlxU.floor(FlxU.floor(timeCounter)/60);
 			var tMillisec:int = (timeCounter%1)*100;
-			var tTime:String = "";
+			var tTime:String = "time: ";
+			if (tSeconds < 10) {
+				tTime += "00"+tSeconds;
+			} else if (tSeconds < 100) {
+				tTime += "0"+tSeconds;
+			} else {
+				tTime += tSeconds;
+			}
+			tTime += " : ";
+			if (tSeconds < 10) {
+				tTime += "0"+tSeconds;
+			} else {
+				tTime += tSeconds;
+			}
+			tTime += " : ";
+			if (tMillisec < 10) {
+				tTime += "0"+tMillisec;
+			} else {
+				tTime += tMillisec;
+			}
 			
-			bottomText.text = "time: "+tMinutes+":"+tSeconds+":"+tMillisec;
+			bottomText.text = tTime;
 
 		}
 		
