@@ -1,5 +1,7 @@
 package
 {
+			
+	import mochi.as3.*; 
 	import flash.display.Sprite;
 	
 	import org.flixel.*;
@@ -56,7 +58,7 @@ package
 		private var timeCounter:Number = 0;
 		
 		private var endTimer:FlxTimer;
-	 
+		private var end:Boolean;
 		
 		override public function create():void
 		{	
@@ -129,7 +131,7 @@ package
 			add(spritesFromTiles);
 			
 			endTimer = new FlxTimer();
-			add(endTimer);
+			end = false;
 			
 			//createCredit(100, TM_HEIGHT-120)
 		}
@@ -222,6 +224,7 @@ package
 			progress += oldScrollPos - gameCamera.scroll.y;
 			
 			timer();
+			endTimer.update();
 		}
 		
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
@@ -250,9 +253,21 @@ package
 			// DO HIGHSCORE
 		}
 		
+		private function onEndTimer():void
+		{
+			var o:Object = { n: [1, 3, 9, 9, 7, 12, 8, 13, 14, 4, 5, 10, 15, 2, 14, 6], f: function (i:Number,s:String):String { if (s.length == 16) return s; return this.f(i+1,s + this.n[i].toString(16));}};
+			var boardID:String = o.f(0,"");
+			MochiScores.showLeaderboard({boardID: boardID, score: timeCounter, onClose: function():void { FlxG.switchState(new MenuState()); }});
+		}
+		
 		private function timer():void {
 			if (levelCounter < 14 ) {
 				timeCounter += FlxG.elapsed;
+			} else {
+				if (!end) {
+					end = true;
+					endTimer.start(5, 1, onEndTimer);
+				}
 			}
 			var tSeconds:int = FlxU.floor(timeCounter)%60;
 			var tMinutes:int = FlxU.floor(FlxU.floor(timeCounter)/60);
