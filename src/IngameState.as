@@ -79,7 +79,7 @@ package
 			
 			//insertCredits();
 			
-			player = new Player(55, TM_HEIGHT-120);
+			player = new Player(70, TM_HEIGHT-120);
 			gameCamera.scroll.y = HEIGHT;
 
 			clouds = new Clouds();
