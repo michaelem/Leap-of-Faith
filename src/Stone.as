@@ -18,6 +18,7 @@ package
 			//offset = new FlxPoint(2, 2);
 			//width = 31;
 			//height = 31
+			play("fall");
 		}
 		
 		
@@ -25,7 +26,7 @@ package
 		override public function update():void
 		{
 			acceleration.x = 0;
-			play("fall");
+			
 		}
 	}
 }
