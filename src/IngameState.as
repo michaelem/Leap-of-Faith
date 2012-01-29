@@ -54,6 +54,8 @@ package
 		private var bottomText2:FlxText;
 		
 		private var timeCounter:Number = 0;
+		
+		private var endTimer:FlxTimer;
 	 
 		
 		override public function create():void
@@ -125,6 +127,9 @@ package
 			spritesFromTiles = new FlxGroup();
 			spritesFromTiles.cameras = [gameCamera];
 			add(spritesFromTiles);
+			
+			endTimer = new FlxTimer();
+			add(endTimer);
 			
 			//createCredit(100, TM_HEIGHT-120)
 		}
@@ -253,12 +258,13 @@ package
 			var tMinutes:int = FlxU.floor(FlxU.floor(timeCounter)/60);
 			var tMillisec:int = (timeCounter%1)*100;
 			var tTime:String = "time: ";
-			if (tSeconds < 10) {
-				tTime += "00"+tSeconds;
+
+			if (tMinutes < 10) {
+				tTime += "00"+tMinutes;
 			} else if (tSeconds < 100) {
-				tTime += "0"+tSeconds;
+				tTime += "0"+tMinutes;
 			} else {
-				tTime += tSeconds;
+				tTime += tMinutes;
 			}
 			tTime += " : ";
 			if (tSeconds < 10) {
