@@ -258,6 +258,7 @@ package
 			var tMinutes:int = FlxU.floor(FlxU.floor(timeCounter)/60);
 			var tMillisec:int = (timeCounter%1)*100;
 			var tTime:String = "time: ";
+
 			if (tMinutes < 10) {
 				tTime += "00"+tMinutes;
 			} else if (tSeconds < 100) {
