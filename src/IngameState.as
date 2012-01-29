@@ -254,11 +254,11 @@ package
 			var tMillisec:int = (timeCounter%1)*100;
 			var tTime:String = "time: ";
 			if (tSeconds < 10) {
-				tTime += "00"+tSeconds;
+				tTime += "00"+tMinutes;
 			} else if (tSeconds < 100) {
-				tTime += "0"+tSeconds;
+				tTime += "0"+tMinutes;
 			} else {
-				tTime += tSeconds;
+				tTime += tMinutes;
 			}
 			tTime += " : ";
 			if (tSeconds < 10) {
