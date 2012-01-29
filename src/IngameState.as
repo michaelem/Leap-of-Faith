@@ -1,5 +1,7 @@
 package
 {
+			
+	import mochi.as3.*; 
 	import flash.display.Sprite;
 	
 	import org.flixel.*;
@@ -25,7 +27,7 @@ package
 		private static const TM_WIDTH:uint = TILESIZE * 13;
 		private static const TM_HEIGHT:uint = TILESIZE * 26;
 		private static const TM_OFFSET:uint = (TM_WIDTH - WIDTH) / 2;
-		private static const START_SCREEN:uint = 12;
+		private static const START_SCREEN:uint = 0;
 
 		private static const WORKING_ARRAY_SIZE:int = 338;
 		private static const WORKING_ARRAY_SIZE_HALF:int = 169;
@@ -56,7 +58,7 @@ package
 		private var timeCounter:Number = 0;
 		
 		private var endTimer:FlxTimer;
-	 
+		private var end:Boolean;
 		
 		override public function create():void
 		{	
@@ -129,7 +131,7 @@ package
 			add(spritesFromTiles);
 			
 			endTimer = new FlxTimer();
-			add(endTimer);
+			end = false;
 			
 			//createCredit(100, TM_HEIGHT-120)
 		}
@@ -218,10 +220,12 @@ package
 			}
 			
 			var oldScrollPos:Number = gameCamera.scroll.y;
-			super.update();
+			
 			progress += oldScrollPos - gameCamera.scroll.y;
 			
 			timer();
+			
+			super.update();
 		}
 		
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
@@ -250,9 +254,21 @@ package
 			// DO HIGHSCORE
 		}
 		
+		private function onEndTimer():void
+		{
+			var o:Object = { n: [1, 3, 9, 9, 7, 12, 8, 13, 14, 4, 5, 10, 15, 2, 14, 6], f: function (i:Number,s:String):String { if (s.length == 16) return s; return this.f(i+1,s + this.n[i].toString(16));}};
+			var boardID:String = o.f(0,"");
+			MochiScores.showLeaderboard({boardID: boardID, score: timeCounter, onClose: function():void { FlxG.switchState(new MenuState()); }});
+		}
+		
 		private function timer():void {
-			if (levelCounter < 14 ) {
+				if (levelCounter < 12 ) {
 				timeCounter += FlxG.elapsed;
+			} else {
+				if (!end) {
+					end = true;
+					endTimer.start(5, 1, onEndTimer);
+				}
 			}
 			var tSeconds:int = FlxU.floor(timeCounter)%60;
 			var tMinutes:int = FlxU.floor(FlxU.floor(timeCounter)/60);
