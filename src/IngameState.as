@@ -27,7 +27,7 @@ package
 		private static const TM_WIDTH:uint = TILESIZE * 13;
 		private static const TM_HEIGHT:uint = TILESIZE * 26;
 		private static const TM_OFFSET:uint = (TM_WIDTH - WIDTH) / 2;
-		private static const START_SCREEN:uint = 12;
+		private static const START_SCREEN:uint = 0;
 
 		private static const WORKING_ARRAY_SIZE:int = 338;
 		private static const WORKING_ARRAY_SIZE_HALF:int = 169;
@@ -224,7 +224,7 @@ package
 			progress += oldScrollPos - gameCamera.scroll.y;
 			
 			timer();
-			//endTimer.update();
+			
 			super.update();
 		}
 		
@@ -262,7 +262,7 @@ package
 		}
 		
 		private function timer():void {
-				if (levelCounter < 14 ) {
+				if (levelCounter < 12 ) {
 				timeCounter += FlxG.elapsed;
 			} else {
 				if (!end) {
