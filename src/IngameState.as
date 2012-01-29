@@ -10,6 +10,7 @@ package
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
 		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
+		[Embed(source="../assets/Explosion34.mp3")] private var SndExplosion:Class;
 		
 		private static const WIDTH:uint = 440;
 		private static const HEIGHT:uint = 450;
@@ -128,7 +129,8 @@ package
 				player.y -= playerScreenY + player.height;
 			} else {
 				if (playerScreenY + player.height < HEIGHT && 
-					playerScreenY + player.height > TILESIZE) {
+					playerScreenY + player.height > TILESIZE &&
+					!player.pain) {
 						level.overlapsWithCallback(player, levelCollision);
 					}
 			}
@@ -184,10 +186,29 @@ package
 				
 			}
 			
+			if (player.pain && player.isDead()) {
+				 FlxG.shake(0.10, 0.5, function():void{
+					    var respawnPoints:Array = level.getTileCoords(5,false);
+						bottomText.text="killed at floor " + respawnPoints[0].x + "/" +  respawnPoints[0].y + respawnPoints[1].x + "/" +  respawnPoints[1].y;
+                        if (respawnPoints[0].y > respawnPoints[1].y)
+                        {
+                            gameCamera.scroll.y = respawnPoints[0].y - 150;
+                            player.x = respawnPoints[0].x + player.width/2;
+                            player.y = respawnPoints[0].y - player.height;
+                        } 
+                        else 
+                        {
+                            gameCamera.scroll.y = respawnPoints[1].y - 150;
+                            player.x = respawnPoints[1].x + player.width/2;
+                            player.y = respawnPoints[1].y - player.height;
+                        }
+                        player.resetPain();
+                }, false, 0);
+			}
+			
 			var oldScrollPos:Number = gameCamera.scroll.y;
 			super.update();
 			progress += oldScrollPos - gameCamera.scroll.y;
-
 		}
 		
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
@@ -219,30 +240,16 @@ package
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
 		{
-			if (tile.index == 4) {
+			if (tile.index == 4 && object is Player && !((object as Player).pain)) {
 				if ( (Math.abs(tile.x-object.x) < 25) && (tile.y-object.y>0) && (tile.y-object.y<30) ) 	//The player will bounce if he collides with a bouncy block.
 				{
 					var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
 					sprite.cameras=[gameCamera];
 					spritesFromTiles.add(sprite)
 					
-	                //bottomText.text="killed at floor " + (levelCounter+2);
-	                var respawnPoints:Array = level.getTileCoords(5,false);
-	                bottomText.text="killed at floor " + respawnPoints[0].x + "/" +  respawnPoints[0].y + respawnPoints[1].x + "/" +  respawnPoints[1].y;
-	                FlxG.shake(0.10, 0.5, function():void{
-	                        if (respawnPoints[0].y > respawnPoints[1].y)
-	                        {
-	                            gameCamera.scroll.y = respawnPoints[0].y - 150;
-	                            object.x = respawnPoints[0].x + object.width/2;
-	                            object.y = respawnPoints[0].y - object.height;
-	                        } 
-	                        else 
-	                        {
-	                            gameCamera.scroll.y = respawnPoints[1].y - 150;
-	                            object.x = respawnPoints[1].x + object.width/2;
-	                            object.y = respawnPoints[1].y - object.height;
-	                        }
-	                }, false, 0);
+					FlxG.play(SndExplosion);
+					(object as Player).pain = true;
+					(object as Player).y += 10;
 	                //object.kill();
 				}
 			} else if (tile.index == 7) {
