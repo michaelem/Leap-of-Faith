@@ -54,6 +54,8 @@ package
 		private var bottomText2:FlxText;
 		
 		private var timeCounter:Number = 0;
+		
+		private var endTimer:FlxTimer;
 	 
 		
 		override public function create():void
@@ -125,6 +127,9 @@ package
 			spritesFromTiles = new FlxGroup();
 			spritesFromTiles.cameras = [gameCamera];
 			add(spritesFromTiles);
+			
+			endTimer = new FlxTimer();
+			add(endTimer);
 			
 			//createCredit(100, TM_HEIGHT-120)
 		}
