@@ -10,6 +10,8 @@ package
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
 		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
+		[Embed(source="../assets/MostlyMono.ttf", fontFamily="MostlyMono", embedAsCFF="false")] private	var	MostlyMonoFont:String;
+		
 		[Embed(source="../assets/Explosion34.mp3")] private var SndExplosion:Class;
 		[Embed(source="../assets/woosh.mp3")] private var SndWoosh:Class;
 		
@@ -48,6 +50,8 @@ package
 		private var camera:Camera;
 		
 		private var bottomText:FlxText;
+		
+		private var timeCounter:Number = 0;
 	 
 		
 		override public function create():void
@@ -100,9 +104,9 @@ package
 			//bottomText.cameras = [borderCamera];
 			//add(bottomText);
 			
-			// "floor xy" - bottomtext
+			// "floor xy" - bottomtext aaaiight
 			bottomText = new FlxText(35, 500, 500, "Floor 1");
-			bottomText.setFormat("aaaiight", 25, 0x00000000, "left");
+			bottomText.setFormat("MostlyMono",25, 0x00000000, "left");
 			bottomText.cameras = [borderCamera];
 			add(bottomText);
 			
@@ -208,6 +212,8 @@ package
 			var oldScrollPos:Number = gameCamera.scroll.y;
 			super.update();
 			progress += oldScrollPos - gameCamera.scroll.y;
+			
+			timer();
 		}
 		
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
@@ -227,6 +233,17 @@ package
 			levelData[tIndex] = 0;
 			credit.kill();
 			// DO HIGHSCORE
+		}
+		
+		private function timer():void {
+			timeCounter += FlxG.elapsed;
+			var tSeconds:int = FlxU.floor(timeCounter)%60;
+			var tMinutes:int = FlxU.floor(FlxU.floor(timeCounter)/60);
+			var tMillisec:int = (timeCounter%1)*100;
+			var tTime:String = "";
+			
+			bottomText.text = "time: "+tMinutes+":"+tSeconds+":"+tMillisec;
+
 		}
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
@@ -321,7 +338,7 @@ package
 			}
 			// neue zweite haelfte
 			for(i=0; i<WORKING_ARRAY_SIZE_HALF; i++) {
-			        levelDataTmp[WORKING_ARRAY_SIZE_HALF+i] = levelData[i];
+			        levelDataTmp[WORKING_ARRAY_SIZE_HALF+i] = level.getTileByIndex(i);
 			}
 			
 			levelCounter++;
