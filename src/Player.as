@@ -43,11 +43,11 @@ package
 		override public function update():void
 		{
 			if (pain) {
-				acceleration.y = 0;
-				velocity.y = 0;
-				x += Math.random() * 10 - 5;
-				y += Math.random() * 10 - 5;
+				acceleration.x = 0;
+				x += Math.random() * 6 - 3;
+				y += Math.random() * 2 - 1;
 				painCounter += FlxG.elapsed;
+				play("idle");
 				return;
 			}
 			// MOVEMENT

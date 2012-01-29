@@ -19,7 +19,7 @@ package
 		private static const TM_WIDTH:uint = TILESIZE * 13;
 		private static const TM_HEIGHT:uint = TILESIZE * 26;
 		private static const TM_OFFSET:uint = (TM_WIDTH - WIDTH) / 2;
-		private static const START_SCREEN:uint = 0;
+		private static const START_SCREEN:uint = 5;
 
 		private static const WORKING_ARRAY_SIZE:int = 338;
 		private static const WORKING_ARRAY_SIZE_HALF:int = 169;
@@ -129,8 +129,7 @@ package
 				player.y -= playerScreenY + player.height;
 			} else {
 				if (playerScreenY + player.height < HEIGHT && 
-					playerScreenY + player.height > TILESIZE &&
-					!player.pain) {
+					playerScreenY + player.height > TILESIZE) {
 						level.overlapsWithCallback(player, levelCollision);
 					}
 			}
@@ -210,7 +209,9 @@ package
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
 		{
 			if (tile.index == 4 && object is Player && !((object as Player).pain)) {
-				if ( (Math.abs(tile.x-object.x) < 25) && (tile.y-object.y>0) && (tile.y-object.y<30) ) 	//The player will bounce if he collides with a bouncy block.
+				var r1:FlxRect = new FlxRect(object.x, object.y, object.width, object.height);
+				var r2:FlxRect = new FlxRect(tile.x + 12, tile.y, tile.width - 24, tile.height);
+				if ( object.y - object.last.y > 0.1 && r1.overlaps(r2) ) 	//The player will bounce if he collides with a bouncy block.
 				{
 					var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
 					sprite.cameras=[gameCamera];
