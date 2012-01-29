@@ -4,17 +4,36 @@ package
 	
 	public class MenuState extends FlxState
 	{
+		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
+		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
+		
+		private var credits:FlxText;
+		private var title:FlxText;
+		private var play:FlxText;
+		
+		
 		override public function create():void
 		{
-			var title:FlxText;
-			title = new FlxText(0, 16, FlxG.width, "Leap of Faith");
-			title.setFormat (null, 16, 0xFFFFFFFF, "center");
+			title = new FlxText(0, 80, FlxG.width, "Leap of Faith");
+			title.setFormat("aaaiight", 35, 0xFFFFFFFF, "center");
 			add(title);
 			
-			var instructions:FlxText;
-			instructions = new FlxText(0, FlxG.height - 32, FlxG.width, "Press Space To Play");
-			instructions.setFormat (null, 8, 0xFFFFFFFF, "center");
-			add(instructions);
+			play = new FlxText(0, 220, FlxG.width, "play");
+			play.setFormat(null, 25, 0xFFFFFFFF, "center");
+			play.flicker(-1);
+			add(play);
+			
+			credits = new FlxText(0, 260, FlxG.width, "credits");
+			credits.setFormat(null, 25, 0xFFFFFFFF, "center");
+			add(credits);
+			
+			
+			
+			
+			var border:FlxSprite = new FlxSprite(0, 0, ImgBorder);
+			add(border);
+			
+			
 			
 		} // end function create
 		
@@ -23,11 +42,22 @@ package
 		{
 			super.update(); // calls update on everything you added to the game loop
 			
-			if (FlxG.keys.justPressed("SPACE"))
+			if (FlxG.keys.justPressed("UP") || (FlxG.keys.justPressed("DOWN")) ) 
 			{
-				FlxG.switchState(new IngameState());
+				if (play.flickering) {
+					play.flicker(0);
+					credits.flicker(-1);
+				}
+				else {
+					play.flicker(-1);
+					credits.flicker(0);
+				}
 			}
-			
+			if (FlxG.keys.justPressed("ENTER") || FlxG.keys.justPressed("SPACE")) {
+				if (play.flickering) {
+					FlxG.switchState(new IngameState());
+				}
+			}
 		} // end function update
 		
 		
