@@ -12,7 +12,8 @@ package
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		[Embed(source="../assets/Explosion34.mp3")] private var SndExplosion:Class;
 		[Embed(source="../assets/woosh.mp3")] private var SndWoosh:Class;
-
+		
+		[Embed(source="../assets/theme.mp3")] private var SndTheme:Class;
 		
 		private static const WIDTH:uint = 440;
 		private static const HEIGHT:uint = 450;
@@ -21,7 +22,7 @@ package
 		private static const TM_WIDTH:uint = TILESIZE * 13;
 		private static const TM_HEIGHT:uint = TILESIZE * 26;
 		private static const TM_OFFSET:uint = (TM_WIDTH - WIDTH) / 2;
-		private static const START_SCREEN:uint = 5;
+		private static const START_SCREEN:uint = 0;
 
 		private static const WORKING_ARRAY_SIZE:int = 338;
 		private static const WORKING_ARRAY_SIZE_HALF:int = 169;
@@ -50,7 +51,7 @@ package
 		override public function create():void
 		{	
 			FlxG.worldBounds = new FlxRect(-10, -10, TM_WIDTH + 20, TM_HEIGHT + 20);
-			
+			FlxG.play(SndTheme, 1.0, true);
 			gameCamera = new FlxCamera(30 - TM_OFFSET, 30, TM_WIDTH, HEIGHT);
 			borderCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
 			
