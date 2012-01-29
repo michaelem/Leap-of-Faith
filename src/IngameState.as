@@ -10,9 +10,13 @@ package
 		[Embed(source="../assets/border.png")] private static var ImgBorder:Class;
 		[Embed(source="../assets/tiles_cardboard.png")] private static var ImgTiles:Class;
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
+		[Embed(source="../assets/MostlyMono.ttf", fontFamily="MostlyMono", embedAsCFF="false")] private	var	MostlyMonoFont:String;
+		
 		[Embed(source="../assets/Explosion34.mp3")] private var SndExplosion:Class;
 		[Embed(source="../assets/woosh.mp3")] private var SndWoosh:Class;
-
+		[Embed(source="../assets/ratsch.mp3")] private var SndRatsch:Class;
+		
+		[Embed(source="../assets/theme.mp3")] private var SndTheme:Class;
 		
 		private static const WIDTH:uint = 440;
 		private static const HEIGHT:uint = 450;
@@ -40,17 +44,21 @@ package
 		
 		private var stones:FlxGroup;
 		
+		private var credits:FlxGroup;
+		
 		private var progress:Number = 0;
 		
 		private var camera:Camera;
 		
 		private var bottomText:FlxText;
+		
+		private var timeCounter:Number = 0;
 	 
 		
 		override public function create():void
 		{	
 			FlxG.worldBounds = new FlxRect(-10, -10, TM_WIDTH + 20, TM_HEIGHT + 20);
-			
+			FlxG.play(SndTheme, 1.0, true);
 			gameCamera = new FlxCamera(30 - TM_OFFSET, 30, TM_WIDTH, HEIGHT);
 			borderCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
 			
@@ -61,6 +69,9 @@ package
 			
 			background = new Background([gameCamera]);
 			add(background);
+			
+			credits = new FlxGroup();
+			add(credits);
 
 			level = new FlxTilemap();
 			levelCounter = 0;
@@ -69,9 +80,11 @@ package
 			initMap();
 			level.loadMap(FlxTilemap.arrayToCSV(levelData,13), ImgTiles, 35, 35, FlxTilemap.OFF);
 			level.cameras = [gameCamera];
-
 			add(level);
-			player = new Player(20, TM_HEIGHT-120);
+			
+			//insertCredits();
+			
+			player = new Player(70, TM_HEIGHT-120);
 			gameCamera.scroll.y = HEIGHT;
 
 			clouds = new Clouds();
@@ -92,9 +105,9 @@ package
 			//bottomText.cameras = [borderCamera];
 			//add(bottomText);
 			
-			// "floor xy" - bottomtext
+			// "floor xy" - bottomtext aaaiight
 			bottomText = new FlxText(35, 500, 500, "Floor 1");
-			bottomText.setFormat("aaaiight", 25, 0x00000000, "left");
+			bottomText.setFormat("MostlyMono",25, 0x00000000, "left");
 			bottomText.cameras = [borderCamera];
 			add(bottomText);
 			
@@ -108,16 +121,11 @@ package
 			stones = new FlxGroup();
 			add(stones);
 			
-			// check collision
-			// spawn
-			// fly
-			// destroy
-			//FlxG.collide(level, player, player.touched);
-			//createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
-			
 			spritesFromTiles = new FlxGroup();
 			spritesFromTiles.cameras = [gameCamera];
 			add(spritesFromTiles);
+			
+			//createCredit(100, TM_HEIGHT-120)
 		}
 		
 		override public function update():void
@@ -159,6 +167,7 @@ package
 			
 			FlxG.collide(stones, player, stonePlayerCollision);
 			FlxG.collide(stones, level, stoneLevelCollision);
+			//FlxG.overlap(credits, player, creditPlayerCollision);
 			
 			
 			// LOAD MAP
@@ -169,7 +178,6 @@ package
 				player.last.y += TM_HEIGHT/2;
 				gameCamera.scroll.y += TM_HEIGHT/2;
 				
-				// remove old sprites
 				for each (var s:FlxSprite in spritesFromTiles.members) {
 					if (s != null) {
 						s.y += TM_HEIGHT/2;
@@ -178,17 +186,12 @@ package
 							remove(s);
 						}
 					}
-				}
-				
-				for each (var q:FlxSprite in stones.members) {
-					if (q != null) {
-							q.y += TM_HEIGHT/2;
-					}
-				}
-				
+				}	// remove old sprites		
+				//insertCredits();		
 			}
 			
 			if (player.pain && player.isDead()) {
+				 
 				 FlxG.shake(0.10, 0.5, function():void{
 					    var respawnPoints:Array = level.getTileCoords(5,false);
 						bottomText.text="killed at floor " + respawnPoints[0].x + "/" +  respawnPoints[0].y + respawnPoints[1].x + "/" +  respawnPoints[1].y;
@@ -211,6 +214,8 @@ package
 			var oldScrollPos:Number = gameCamera.scroll.y;
 			super.update();
 			progress += oldScrollPos - gameCamera.scroll.y;
+			
+			timer();
 		}
 		
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
@@ -218,12 +223,33 @@ package
 			if (stone.isHit) return;
 			player.pain = true;
 			stone.hit();
+			FlxG.play(SndRatsch);
 		}
 		
 		private function stoneLevelCollision(stone:Stone, level:FlxTilemap):void	//function called when player touches a bouncy block
 		{
 			if (stone.isHit) return;
 			stone.hit();
+			FlxG.play(SndRatsch);
+		}
+		
+		private function creditPlayerCollision(credit:Credit, player:Player):void	//function called when player touches a bouncy block
+		{
+			var tIndex:int = getIndexByWorldCoords(credit.x,credit.y);
+			level.setTileByIndex(tIndex ,0,true);
+			levelData[tIndex] = 0;
+			credit.kill();
+			// DO HIGHSCORE
+		}
+		
+		private function timer():void {
+			timeCounter += FlxG.elapsed;
+			var tSeconds:int = FlxU.floor(timeCounter)%60;
+			var tMinutes:int = FlxU.floor(FlxU.floor(timeCounter)/60);
+			var tMillisec:int = (timeCounter%1)*100;
+			var tTime:String = "";
+			
+			bottomText.text = "time: "+tMinutes+":"+tSeconds+":"+tMillisec;
 		}
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
@@ -262,7 +288,7 @@ package
 				FlxG.collide(tile, object);
 							
 			} else {
-				if (tile.index != 5) FlxG.collide(tile, object);
+				if (tile.index != 5 && tile.index != 8) FlxG.collide(tile, object);
 			}
 			
 		}
@@ -285,6 +311,13 @@ package
 			stones.add(stone);
 		}
 		
+		public function createCredit(X:uint,Y:uint):void
+		{
+			var credit:Credit = new Credit(X,Y);
+			credit.cameras = [gameCamera];
+			credits.add(credit);
+		}
+		
 		public function initMap():void
 		{
 			var levelDataTmp:Array = new Array(WORKING_ARRAY_SIZE);
@@ -297,6 +330,7 @@ package
 			for(i=0; i<WORKING_ARRAY_SIZE_HALF; i++) {
 			        levelData[WORKING_ARRAY_SIZE_HALF+i] = Screens.screens[START_SCREEN][i];
 			}
+			
 		}
 		
 		public function swapMap(levelData:Array):Array
@@ -310,10 +344,23 @@ package
 			}
 			// neue zweite haelfte
 			for(i=0; i<WORKING_ARRAY_SIZE_HALF; i++) {
-			        levelDataTmp[WORKING_ARRAY_SIZE_HALF+i] = levelData[i];
+			        levelDataTmp[WORKING_ARRAY_SIZE_HALF+i] = level.getTileByIndex(i);
 			}
+			
 			levelCounter++;
 			return levelDataTmp;
+		}
+		
+		public function insertCredits():void
+		{
+		    // insert credits
+			if (credits != null) {
+				credits.clear();
+				var creditPoints:Array = level.getTileCoords(8,false);
+				for (var j:int = 0; j<creditPoints.length; j++) {
+					createCredit(creditPoints[j].x+2, creditPoints[j].y+2)				
+				}
+			}	
 		}
 		
 		public function getIndexByWorldCoords(x:int,y:int):int

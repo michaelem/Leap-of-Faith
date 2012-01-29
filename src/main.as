@@ -9,7 +9,7 @@ package
     {
         public function main():void
         {
-            super(500,600,IngameState,1);
+            super(500,600,MenuState,1);
             forceDebugger = true;
         }
     }
