@@ -10,10 +10,6 @@ package
 		private var sertscho:FlxText;
 		private var sertschoHandle:FlxText;
 		
-		private var simon:FlxText;
-		private var simonHandle:FlxText;
-		
-		private var play:FlxText;
 		
 		private var dist:int = 60;
 		private var offset:int = 30;
