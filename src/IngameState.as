@@ -132,6 +132,7 @@ package
 			add(spritesFromTiles);
 			
 			endTimer = new FlxTimer();
+
 			end = false;
 			
 			//createCredit(100, TM_HEIGHT-120)
@@ -221,10 +222,12 @@ package
 			}
 			
 			var oldScrollPos:Number = gameCamera.scroll.y;
-			super.update();
+			
 			progress += oldScrollPos - gameCamera.scroll.y;
 			
 			timer();
+			
+			super.update();
 		}
 		
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
