@@ -266,12 +266,12 @@ package
 		}
 		
 		private function timer():void {
-			if (levelCounter < 13 ) {
+			if (levelCounter < 13 || player.y + player.height > 420) {
 				timeCounter += FlxG.elapsed;
 			} else {
 				if (!end) {
 					end = true;
-					endTimer.start(7, 1, onEndTimer);
+					endTimer.start(5, 1, onEndTimer);
 				}
 			}
 			var tSeconds:int = FlxU.floor(timeCounter)%60;

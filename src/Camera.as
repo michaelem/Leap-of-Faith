@@ -16,7 +16,7 @@ package
 		override public function update():void
 		{
 			this.y = flxCamera.scroll.y;
-			if (y + 150 > player.y) {
+			if (y + 180 > player.y) {
 				acceleration.y = -100;
 				drag.y = 0;
 			} else {
