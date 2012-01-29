@@ -106,13 +106,6 @@ package
 			stones = new FlxGroup();
 			add(stones);
 			
-			// check collision
-			// spawn
-			// fly
-			// destroy
-			//FlxG.collide(level, player, player.touched);
-			//createStone(TM_WIDTH/2+100, TM_HEIGHT*3/4);
-			
 			spritesFromTiles = new FlxGroup();
 			spritesFromTiles.cameras = [gameCamera];
 			add(spritesFromTiles);
@@ -155,7 +148,7 @@ package
 				}
 			}
 			
-			FlxG.collide(stones, player, stonePlayerCollision);
+			FlxG.overlap(stones, player, stonePlayerCollision);
 			FlxG.collide(stones, level, stoneLevelCollision);
 			
 			
@@ -213,24 +206,7 @@ package
 		
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
 		{
-			//bottomText.text="killed at floor " + (levelCounter+2);
-            var respawnPoints:Array = level.getTileCoords(5,false);
-            bottomText.text="killed at floor " + respawnPoints[0].x + "/" +  respawnPoints[0].y + respawnPoints[1].x + "/" +  respawnPoints[1].y;
-            FlxG.shake(0.10, 0.5, function():void{
-                    if (respawnPoints[0].y > respawnPoints[1].y)
-                    {
-                        gameCamera.scroll.y = respawnPoints[0].y - 150;
-                        player.x = respawnPoints[0].x + player.width/2;
-                        player.y = respawnPoints[0].y - player.height;
-                    } 
-                    else 
-                    {
-                        gameCamera.scroll.y = respawnPoints[1].y - 150;
-                        player.x = respawnPoints[1].x + player.width/2;
-                        player.y = respawnPoints[1].y - player.height;
-                    }
-            }, false, 0);
-			//player.pain = true;
+			player.pain = true;
 		}
 		
 		private function stoneLevelCollision(stone:Stone, level:FlxTilemap):void	//function called when player touches a bouncy block
