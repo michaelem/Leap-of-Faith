@@ -79,7 +79,7 @@ package
 			
 			//insertCredits();
 			
-			player = new Player(20, TM_HEIGHT-120);
+			player = new Player(70, TM_HEIGHT-120);
 			gameCamera.scroll.y = HEIGHT;
 
 			clouds = new Clouds();
@@ -120,7 +120,7 @@ package
 			spritesFromTiles.cameras = [gameCamera];
 			add(spritesFromTiles);
 			
-			createCredit(100, TM_HEIGHT-120)
+			//createCredit(100, TM_HEIGHT-120)
 		}
 		
 		override public function update():void
