@@ -18,7 +18,7 @@ package
 		private static const TM_WIDTH:uint = TILESIZE * 13;
 		private static const TM_HEIGHT:uint = TILESIZE * 26;
 		private static const TM_OFFSET:uint = (TM_WIDTH - WIDTH) / 2;
-		private static const START_SCREEN:uint = 0;
+		private static const START_SCREEN:uint = 7;
 
 		private static const WORKING_ARRAY_SIZE:int = 338;
 		private static const WORKING_ARRAY_SIZE_HALF:int = 169;
@@ -180,9 +180,7 @@ package
 					sprite.cameras=[gameCamera];
 					spritesFromTiles.add(sprite)
 					
-	                //bottomText.text="killed at floor " + (levelCounter+2);
 	                var respawnPoints:Array = level.getTileCoords(5,false);
-	                bottomText.text="killed at floor " + respawnPoints[0].x + "/" +  respawnPoints[0].y + respawnPoints[1].x + "/" +  respawnPoints[1].y;
 	                FlxG.shake(0.10, 0.5, function():void{
 	                        if (respawnPoints[0].y > respawnPoints[1].y)
 	                        {
