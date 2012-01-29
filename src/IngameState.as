@@ -285,7 +285,7 @@ package
 				{
 					var sprite:FlxSprite  = new FlxSprite(tile.getMidpoint().x, tile.getMidpoint().y);
 					sprite.cameras=[gameCamera];
-					spritesFromTiles.add(sprite)
+					//spritesFromTiles.add(sprite)
 					FlxG.play(SndExplosion);
 					(object as Player).pain = true;
 					(object as Player).y += 10;

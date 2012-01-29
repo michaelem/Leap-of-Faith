@@ -19,12 +19,12 @@ package
 			add(title);
 			
 			play = new FlxText(0, 220, FlxG.width, "play");
-			play.setFormat(null, 25, 0xFFFFFFFF, "center");
+			play.setFormat("aaaiight", 25, 0xFFFFFFFF, "center");
 			play.flicker(-1);
 			add(play);
 			
 			credits = new FlxText(0, 260, FlxG.width, "credits");
-			credits.setFormat(null, 25, 0xFFFFFFFF, "center");
+			credits.setFormat("aaaiight", 25, 0xFFFFFFFF, "center");
 			add(credits);
 			
 			
@@ -56,6 +56,8 @@ package
 			if (FlxG.keys.justPressed("ENTER") || FlxG.keys.justPressed("SPACE")) {
 				if (play.flickering) {
 					FlxG.switchState(new IngameState());
+				} else if (credits.flickering) {
+					FlxG.switchState(new CreditsState());
 				}
 			}
 		} // end function update
