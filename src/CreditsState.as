@@ -10,35 +10,41 @@ package
 		private var sertscho:FlxText;
 		private var sertschoHandle:FlxText;
 		
-		private var simon:FlxText;
-		private var simonHandle:FlxText;
 		
-		private var play:FlxText;
-		
-		
+		private var dist:int = 60;
+		private var offset:int = 30;
 		override public function create():void
 		{
-			sertscho = new FlxText(0, 70, FlxG.width, "Martin Sereinig");
+			sertscho = new FlxText(0, offset+dist, FlxG.width, "Martin Sereinig");
 			sertscho.setFormat("aaaiight", 25, 0xFFFFFFFF, "center");
 			add(sertscho);
 			
-			sertschoHandle = new FlxText(0, 100, FlxG.width, "@srecnig");
+			sertschoHandle = new FlxText(0, offset+offset+dist, FlxG.width, "@srecnig");
 			sertschoHandle.setFormat("aaaiight", 15, 0xFFFFFFFF, "center");
 			add(sertschoHandle);
 			
-			sertscho = new FlxText(0, 130, FlxG.width, "Simon Parzer");
+			sertscho = new FlxText(0,  offset+dist*2, FlxG.width, "Simon Parzer");
 			sertscho.setFormat("aaaiight", 25, 0xFFFFFFFF, "center");
 			add(sertscho);
 			
-			sertschoHandle = new FlxText(0, 160, FlxG.width, "@simonparzer");
+			sertschoHandle = new FlxText(0,  offset+offset+dist*2, FlxG.width, "@simonparzer");
 			sertschoHandle.setFormat("aaaiight", 15, 0xFFFFFFFF, "center");
 			add(sertschoHandle);
 			
-			sertscho = new FlxText(0, 130, FlxG.width, "Simon Parzer");
+			sertscho = new FlxText(0,  offset+dist*3, FlxG.width, "Michael Ari");
 			sertscho.setFormat("aaaiight", 25, 0xFFFFFFFF, "center");
 			add(sertscho);
 			
-			sertschoHandle = new FlxText(0, 160, FlxG.width, "@simonparzer");
+			sertschoHandle = new FlxText(0,  offset+offset+dist*3, FlxG.width, "@crux05");
+			sertschoHandle.setFormat("aaaiight", 15, 0xFFFFFFFF, "center");
+			add(sertschoHandle);
+			
+			
+			sertscho = new FlxText(0,  offset+dist*4, FlxG.width, "Michael Emhofer");
+			sertscho.setFormat("aaaiight", 25, 0xFFFFFFFF, "center");
+			add(sertscho);
+			
+			sertschoHandle = new FlxText(0,  offset+offset+dist*4, FlxG.width, "@michaelem");
 			sertschoHandle.setFormat("aaaiight", 15, 0xFFFFFFFF, "center");
 			add(sertschoHandle);
 			
