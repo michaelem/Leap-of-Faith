@@ -53,7 +53,7 @@ package
 					credits.flicker(0);
 				}
 			}
-			if (FlxG.keys.justPressed("ENTER")) {
+			if (FlxG.keys.justPressed("ENTER") || FlxG.keys.justPressed("SPACE")) {
 				if (play.flickering) {
 					FlxG.switchState(new IngameState());
 				}

@@ -12,6 +12,7 @@ package
 		[Embed(source="../assets/aaaiight.ttf", fontFamily="aaaiight", embedAsCFF="false")] private	var	aaaiightFont:String;
 		[Embed(source="../assets/Explosion34.mp3")] private var SndExplosion:Class;
 		[Embed(source="../assets/woosh.mp3")] private var SndWoosh:Class;
+		[Embed(source="../assets/ratsch.mp3")] private var SndRatsch:Class;
 		
 		[Embed(source="../assets/theme.mp3")] private var SndTheme:Class;
 		
@@ -186,6 +187,7 @@ package
 			}
 			
 			if (player.pain && player.isDead()) {
+				 
 				 FlxG.shake(0.10, 0.5, function():void{
 					    var respawnPoints:Array = level.getTileCoords(5,false);
 						bottomText.text="killed at floor " + respawnPoints[0].x + "/" +  respawnPoints[0].y + respawnPoints[1].x + "/" +  respawnPoints[1].y;
@@ -213,11 +215,13 @@ package
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
 		{
 			player.pain = true;
+			FlxG.play(SndRatsch);
 		}
 		
 		private function stoneLevelCollision(stone:Stone, level:FlxTilemap):void	//function called when player touches a bouncy block
 		{
 			stone.kill();
+			FlxG.play(SndRatsch);
 		}
 		
 		private function creditPlayerCollision(credit:Credit, player:Player):void	//function called when player touches a bouncy block
