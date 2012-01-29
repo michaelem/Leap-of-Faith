@@ -133,15 +133,6 @@ package
 					}
 			}
 			
-			for each (var w:FlxSprite in stones.members) {
-				if (w != null) {
-					//FlxG.log(w.getScreenXY().y);
-						if (w.getScreenXY().y > HEIGHT) {
-							w.y -= TM_HEIGHT/2;
-						}
-				}
-			}
-			
 			// COLLISION
 			if (player.x < TM_OFFSET) {
 				player.x = TM_OFFSET;
@@ -152,6 +143,19 @@ package
 				player.x = TM_WIDTH - TM_OFFSET - player.width;
 				player.velocity.x = -player.velocity.x;
 			}
+			
+			for each (var w:FlxSprite in stones.members) {
+				if (w != null) {
+					//FlxG.log(w.getScreenXY().y);
+						if (w.getScreenXY().y > HEIGHT) {
+							w.y -= TM_HEIGHT/2;
+						}
+				}
+			}
+			
+			FlxG.collide(stones, player, stonePlayerCollision);
+			FlxG.collide(stones, level, stoneLevelCollision);
+			
 			
 			// LOAD MAP
 			if (gameCamera.scroll.y == 0) {
@@ -184,6 +188,33 @@ package
 			super.update();
 			progress += oldScrollPos - gameCamera.scroll.y;
 
+		}
+		
+		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
+		{
+			//bottomText.text="killed at floor " + (levelCounter+2);
+            var respawnPoints:Array = level.getTileCoords(5,false);
+            bottomText.text="killed at floor " + respawnPoints[0].x + "/" +  respawnPoints[0].y + respawnPoints[1].x + "/" +  respawnPoints[1].y;
+            FlxG.shake(0.10, 0.5, function():void{
+                    if (respawnPoints[0].y > respawnPoints[1].y)
+                    {
+                        gameCamera.scroll.y = respawnPoints[0].y - 150;
+                        player.x = respawnPoints[0].x + player.width/2;
+                        player.y = respawnPoints[0].y - player.height;
+                    } 
+                    else 
+                    {
+                        gameCamera.scroll.y = respawnPoints[1].y - 150;
+                        player.x = respawnPoints[1].x + player.width/2;
+                        player.y = respawnPoints[1].y - player.height;
+                    }
+            }, false, 0);
+			//player.pain = true;
+		}
+		
+		private function stoneLevelCollision(stone:Stone, level:FlxTilemap):void	//function called when player touches a bouncy block
+		{
+			stone.kill();
 		}
 		
 		private function levelCollision(tile:FlxTile, object:FlxObject):void	//function called when player touches a bouncy block
@@ -224,17 +255,7 @@ package
 					level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35),0,true);
 				}
 				FlxG.collide(tile, object);
-			} 	else if (tile.index == 7) {
-					FlxG.log("x "+tile.x+" y "+ tile.y);
-					FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
-					if (level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)) == 6) {
-						createStone(tile.x, tile.y+35);
-						//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
-						//FlxG.log("num"+level.getTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35)));
-						level.setTileByIndex(getIndexByWorldCoords(tile.x,tile.y+35),0,true);
-					}
-					FlxG.collide(tile, object);
-			} 	else if (tile.index == 6) {
+			} else if (tile.index == 6) {
 							//FlxG.log("x "+tile.x+" y "+ tile.y);
 							//FlxG.log("index"+getIndexByWorldCoords(tile.x,tile.y+35));
 				createStone(tile.x, tile.y);

@@ -15,6 +15,9 @@ package
 			drag.x = maxVelocity.x * 4;
 			loadGraphic(imgStones, true, true, 35, 35);
 			addAnimation("fall", new Array(6,6,6), 3, true);
+			//offset = new FlxPoint(2, 2);
+			//width = 31;
+			//height = 31
 		}
 		
 		
