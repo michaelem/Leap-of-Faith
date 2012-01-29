@@ -228,6 +228,8 @@ package
 		
 		private function stoneLevelCollision(stone:Stone, level:FlxTilemap):void	//function called when player touches a bouncy block
 		{
+			var stoneScreenY:int = stone.y - gameCamera.scroll.y;
+			if (stoneScreenY + stone.height < TILESIZE) return;
 			if (stone.isHit) return;
 			stone.hit();
 			FlxG.play(SndRatsch);
