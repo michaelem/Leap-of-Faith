@@ -148,6 +148,7 @@ package
 			if (playerScreenY > HEIGHT) {
 				FlxG.play(SndWoosh);
 				player.y -= playerScreenY + player.height;
+				player.last.y = player.y;
 			} else {
 				if (playerScreenY + player.height < HEIGHT && 
 					playerScreenY + player.height > TILESIZE) {
@@ -168,9 +169,14 @@ package
 			
 			for each (var w:FlxSprite in stones.members) {
 				if (w != null) {
+					var wScreenY:int = w.y - gameCamera.scroll.y;
 					//FlxG.log(w.getScreenXY().y);
-						if (w.getScreenXY().y > HEIGHT) {
-							w.y -= TM_HEIGHT/2;
+						if (wScreenY > HEIGHT) {
+							w.y -= wScreenY + w.height;
+							w.last.y = w.y;
+						}
+						if (wScreenY > TILESIZE && wScreenY + w.height < HEIGHT) {
+							w.solid = true;
 						}
 				}
 			}
@@ -188,15 +194,25 @@ package
 				player.last.y += TM_HEIGHT/2;
 				gameCamera.scroll.y += TM_HEIGHT/2;
 				
-				for each (var s:FlxSprite in spritesFromTiles.members) {
+				var s:FlxSprite;
+				for each (s in spritesFromTiles.members) {
 					if (s != null) {
 						s.y += TM_HEIGHT/2;
-						if (s.getScreenXY().y > HEIGHT) {
+						if (s.y - gameCamera.scroll.y > HEIGHT) {
 							spritesFromTiles.remove(s);
 							remove(s);
 						}
 					}
 				}	// remove old sprites		
+				for each (s in stones.members) {
+					if (s != null) {
+						s.y += TM_HEIGHT/2;
+						if (s.y - gameCamera.scroll.y > HEIGHT) {
+							spritesFromTiles.remove(s);
+							remove(s);
+						}
+					}
+				}	// remove old sprites	
 				//insertCredits();		
 			}
 			
@@ -241,7 +257,11 @@ package
 		private function stoneLevelCollision(stone:Stone, level:FlxTilemap):void	//function called when player touches a bouncy block
 		{
 			var stoneScreenY:int = stone.y - gameCamera.scroll.y;
-			if (stoneScreenY + stone.height < TILESIZE) return;
+			if (stoneScreenY + stone.height > HEIGHT ||
+				stoneScreenY + stone.height < TILESIZE) {
+				stone.solid = false; 
+				return;
+			}
 			if (stone.isHit) return;
 			stone.hit();
 			FlxG.play(SndRatsch);
