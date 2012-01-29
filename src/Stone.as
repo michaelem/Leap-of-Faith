@@ -43,8 +43,8 @@ package
 				particles.start();
 				solid = false;
 				particles.y += 5;
+				particlesTimer.start(2, 1, function():void{exists = false});
 			}
-			//particlesTimer.start(2, 1, function():void{exists = false});
 		}
 		
 		override public function update():void
@@ -55,6 +55,7 @@ package
 				particles.at(this);
 			}
 			particles.update();
+			particlesTimer.update();
 		}
 		
 		override public function draw():void
