@@ -129,7 +129,7 @@ package
 			add(spritesFromTiles);
 			
 			endTimer = new FlxTimer();
-			add(endTimer);
+			//add(endTimer);
 			
 			//createCredit(100, TM_HEIGHT-120)
 		}
@@ -251,9 +251,9 @@ package
 		}
 		
 		private function timer():void {
-			if (levelCounter < 12 ) {
-				timeCounter += FlxG.elapsed;
-			}
+			//if (levelCounter < 14 ) {
+			//	timeCounter += FlxG.elapsed;
+			//}
 			var tSeconds:int = FlxU.floor(timeCounter)%60;
 			var tMinutes:int = FlxU.floor(FlxU.floor(timeCounter)/60);
 			var tMillisec:int = (timeCounter%1)*100;
