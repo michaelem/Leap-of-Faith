@@ -43,7 +43,7 @@ package
 				particles.start();
 				solid = false;
 				particles.y += 5;
-				particlesTimer.start(2, 1, function():void{exists = false});
+				particlesTimer.start(2, 1, function(t:FlxTimer):void{exists = false});
 			}
 		}
 		

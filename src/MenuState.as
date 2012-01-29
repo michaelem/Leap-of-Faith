@@ -14,6 +14,8 @@ package
 		
 		override public function create():void
 		{
+			FlxG.bgColor = 0xff000000;
+			
 			title = new FlxText(0, 80, FlxG.width, "Leap of Faith");
 			title.setFormat("aaaiight", 35, 0xFFFFFFFF, "center");
 			add(title);
