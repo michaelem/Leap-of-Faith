@@ -237,13 +237,11 @@ package
                 }, false, 0);
 			}
 			
-			var oldScrollPos:Number = gameCamera.scroll.y;
-			
-			progress += oldScrollPos - gameCamera.scroll.y;
-			
 			timer();
 			
+			var oldScrollPos:Number = gameCamera.scroll.y;
 			super.update();
+			progress += oldScrollPos - gameCamera.scroll.y;
 		}
 		
 		private function stonePlayerCollision(stone:Stone, player:Player):void	//function called when player touches a bouncy block
